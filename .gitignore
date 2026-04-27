@@ -1,0 +1,9 @@
+node_modules
+
+out/
+
+# Docker data (local only)
+.docker/
+
+# Local env overrides
+.env.local

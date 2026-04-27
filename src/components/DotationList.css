@@ -1,0 +1,117 @@
+/* DotationList.css */
+
+/* Importation de la police Roboto */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+.dotation-list-container {
+  padding: 24px;
+  background-color: #f5f5f5;
+  min-height: 100vh;
+  font-family: 'Roboto', sans-serif;
+}
+
+/* En-tête de la liste */
+.dotation-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.dotation-list-header h1 {
+  font-size: 2rem;
+  color: #2C3E50;
+  margin: 0;
+}
+
+.dotation-list-header a {
+  text-decoration: none;
+}
+
+/* Champ de recherche */
+.dotation-list-search {
+  margin-bottom: 16px;
+}
+
+.dotation-list-search .ant-input {
+  border-radius: 4px;
+}
+
+/* Bouton d'ajout et boutons d'action */
+.dotation-add-btn {
+  display: inline-block;
+  margin: 0;
+}
+
+.ant-btn-primary {
+  font-weight: bold;
+}
+
+.ant-btn-primary:hover {
+  opacity: 0.9;
+}
+
+/* Style du tableau */
+.dotation-list-table .ant-table-thead > tr > th {
+  background-color: #1a936f;
+  color: #fff;
+  font-weight: bold;
+  text-align: center;
+  font-family: 'Roboto', sans-serif;
+}
+
+.dotation-list-table .ant-table-tbody > tr > td {
+  text-align: center;
+  font-family: 'Roboto', sans-serif;
+}
+
+/* Option de bordure et arrondi du tableau */
+.dotation-list-table {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+/* Style du résumé par région */
+.dotation-summary {
+  margin-top: 32px;
+  text-align: center;
+}
+
+.dotation-summary-title {
+  font-size: 1.5rem;
+  color: #2C3E50;
+  margin-bottom: 16px;
+}
+
+.summary-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 auto;
+}
+
+.summary-table th, .summary-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  font-family: 'Roboto', sans-serif;
+}
+
+.summary-table th {
+  background-color: #1a936f;
+  color: #fff;
+  font-weight: bold;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 768px) {
+  .dotation-list-container {
+    padding: 16px;
+  }
+  .dotation-list-header h1 {
+    font-size: 1.8rem;
+  }
+  .summary-table th, .summary-table td {
+    padding: 6px;
+    font-size: 0.9rem;
+  }
+}

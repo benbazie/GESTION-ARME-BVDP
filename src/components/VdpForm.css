@@ -1,0 +1,393 @@
+/* VdpForm.css */
+
+/* Import de la police Roboto */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: #f2f4f7;
+  margin: 0;
+  padding: 0;
+  color: #333;
+}
+
+/* Conteneur global du formulaire */
+.vdp-form-container {
+  max-width: 900px;
+  margin: 50px auto;
+  padding: 40px;
+  background: linear-gradient(135deg, #ffffff 0%, #fdfdfd 100%);
+  border-radius: 12px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.15);
+}
+
+/* Carte du formulaire */
+.vdp-form-card {
+  border: none;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px -12px #b0c4b1;
+  background: #fff;
+}
+
+/* Titre de la carte */
+.vdp-form-card .ant-card-head {
+  background: linear-gradient(135deg, #d62828, #1a936f);
+  color: #fff;
+  text-align: center;
+  padding: 18px;
+  border-radius: 12px 12px 0 0;
+}
+.vdp-form-card .ant-card-head-title {
+  font-size: 32px;
+  color: #fff;
+  font-weight: 700;
+  border-bottom: 3px solid #d62828;
+  padding-bottom: 10px;
+}
+
+/* Styles généraux du formulaire */
+.vdp-form {
+  padding: 20px;
+}
+.vdp-form .ant-form-item {
+  margin-bottom: 24px;
+}
+.vdp-form .ant-form-item-label > label {
+  font-weight: 700;
+  color: #2C3E50;
+  font-size: 16px;
+}
+.vdp-form .ant-form-item-control {
+  width: 100%;
+}
+
+/* Conteneur de section (délimitation des étapes) */
+.section-container {
+  border: 2px solid;
+  border-image: linear-gradient(to right, #d62828, #1a936f) 1;
+  border-radius: 8px;
+  padding: 25px;
+  margin-bottom: 30px;
+  background-color: #fff;
+  animation: fadeIn 0.5s ease-in-out;
+}
+.section-divider {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1a936f;
+  margin-bottom: 18px;
+  text-align: left;
+  letter-spacing: 1px;
+  border-left: 6px solid #d62828;
+  padding-left: 12px;
+  background: linear-gradient(90deg, #f6fff8 0%, #e3f1e6 100%);
+  box-shadow: 0 2px 8px rgba(41, 61, 46, 0.08);
+  animation: fadeIn 0.6s;
+}
+
+/* Styles pour Steps (progression du Wizard) */
+.ant-steps-item-title {
+  font-size: 14px;
+  font-weight: 600;
+}
+.ant-steps-item-icon {
+  background: #1a936f !important;
+  color: #fff;
+}
+
+/* Champs de saisie, sélecteurs et DatePicker */
+.ant-input,
+.ant-select-selector,
+.ant-picker {
+  border-radius: 6px;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Bouton principal */
+.vdp-form .ant-btn-primary {
+  width: 100%;
+  background: linear-gradient(90deg, #d62828, #1a936f);
+  border: none;
+  font-size: 16px;
+  font-weight: 700;
+  border-radius: 6px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+.vdp-form .ant-btn-primary:hover {
+  opacity: 0.92;
+  transform: translateY(-2px);
+}
+
+/* Bouton de retour */
+.back-button {
+  background-color: #95a5a6;
+  border: none;
+  font-weight: 600;
+  border-radius: 6px;
+  color: #fff;
+  padding: 8px 16px;
+  transition: background-color 0.3s ease;
+}
+.back-button:hover {
+  background-color: #7f8c8d;
+}
+
+/* Upload : gestion de la photo */
+.ant-upload {
+  width: 100%;
+}
+.ant-upload-list-picture-card-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+}
+
+/* Prévisualisation d'image & QR Code */
+.preview-container {
+  text-align: center;
+  margin-top: 10px;
+}
+.preview-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #2C3E50;
+  margin-bottom: 5px;
+}
+.preview-image {
+  margin-top: 8px;
+  max-width: 120px;
+  max-height: 120px;
+  border-radius: 8px;
+  border: 1px solid #e3f1e6;
+  box-shadow: 0 2px 8px rgba(41, 61, 46, 0.08);
+  transition: transform 0.3s ease;
+}
+.preview-image:hover {
+  transform: scale(1.05);
+}
+
+/* Animation de fondu pour les étapes */
+.animated.fadeIn {
+  animation: fadeIn 0.7s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px);}
+  to   { opacity: 1; transform: translateY(0);}
+}
+
+/* Boutons de navigation dans le wizard */
+.vdp-form-wizard-container .ant-btn {
+  min-width: 120px;
+  font-weight: 600;
+  border-radius: 6px;
+  margin-top: 8px;
+}
+
+/* Liens dans le formulaire */
+.vdp-form-container a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .vdp-form-container {
+    margin: 20px;
+    padding: 20px;
+  }
+  .vdp-form-card .ant-card-head-title {
+    font-size: 28px;
+  }
+  .vdp-form .ant-form-item {
+    margin-bottom: 16px;
+  }
+}
+@media (max-width: 900px) {
+  .vdp-form-card { padding: 8px; }
+  .vdp-section-title { font-size: 1em; }
+}
+@media (max-width: 600px) {
+  .vdp-form-card { padding: 0; }
+  .vdp-section-title { font-size: 0.95em; }
+}
+
+/* Styles pour les boutons d’export, impression, analyse croisée, etc. */
+.vdp-form-card .ant-card-extra .ant-btn {
+  margin-left: 8px;
+  font-weight: 600;
+  border-radius: 6px;
+  transition: background 0.3s, color 0.3s;
+}
+.vdp-form-card .ant-card-extra .ant-btn:hover {
+  background: #1a936f;
+  color: #fff;
+}
+
+/* Styles pour le modal en plein écran */
+.cross-modal-fullscreen .ant-modal {
+  width: 100vw !important;
+  max-width: 100vw !important;
+  top: 0 !important;
+  left: 0 !important;
+  height: 98vh !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+.cross-modal-fullscreen .ant-modal-content {
+  height: 96vh !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+}
+
+.vdp-form-page {
+  background: linear-gradient(180deg, #f6fff8 0%, #e3f1e6 100%);
+  min-height: 100vh;
+  padding: 32px 0;
+}
+.vdp-section-title {
+  font-size: 1.2em;
+  font-weight: 700;
+  color: #1a936f;
+  margin-bottom: 18px;
+  letter-spacing: 1px;
+  border-left: 6px solid #d62828;
+  padding-left: 12px;
+  background: linear-gradient(90deg, #f6fff8 0%, #e3f1e6 100%);
+  box-shadow: 0 2px 8px rgba(41, 61, 46, 0.08);
+}
+.vdp-form-wizard-container {
+  margin-top: 32px;
+  margin-bottom: 8px;
+}
+
+/* Styles XXL */
+.vdp-form-xxxl-bg {
+  background: linear-gradient(120deg, #e3f1e6 0%, #f6fff8 100%);
+  min-height: 100vh;
+  padding: 48px 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+.vdp-form-xxxl-card {
+  box-shadow: 0 12px 48px -18px #b0c4b1;
+  border-radius: 28px;
+  background: #fff;
+  animation: fadeInDown 0.9s;
+  width: 100%;
+}
+.vdp-form-xxxl-title {
+  font-size: 2.2em;
+  font-weight: 900;
+  color: #1a936f;
+  letter-spacing: 2px;
+  text-shadow: 0 2px 12px #e3f1e6;
+  animation: fadeInLeft 1.1s;
+}
+.vdp-section-xxxl-title {
+  font-size: 1.35em;
+  font-weight: 800;
+  color: #1a936f;
+  margin-bottom: 24px;
+  letter-spacing: 1.5px;
+  border-left: 8px solid #d62828;
+  padding-left: 18px;
+  background: linear-gradient(90deg, #f6fff8 0%, #e3f1e6 100%);
+  box-shadow: 0 2px 8px rgba(41, 61, 46, 0.08);
+  animation: fadeInLeft 1s;
+}
+.vdp-form-xxxl-form .ant-form-item-label > label {
+  font-size: 1.13em;
+  font-weight: 700;
+  color: #1a936f;
+  animation: fadeIn 1.2s;
+}
+.preview-image-xxxl {
+  margin-top: 16px;
+  max-width: 140px;
+  max-height: 140px;
+  border-radius: 12px;
+  border: 2px solid #e3f1e6;
+  box-shadow: 0 2px 18px rgba(41, 61, 46, 0.08);
+  animation: bounceIn 0.9s;
+}
+.vdp-form-wizard-container-xxxl {
+  margin-top: 48px;
+  margin-bottom: 8px;
+}
+.vdp-btn-xxxl {
+  font-size: 1.13em;
+  font-weight: 700;
+  border-radius: 10px;
+  margin-top: 12px;
+  margin-bottom: 12px;
+  min-height: 48px;
+  transition: background 0.3s, color 0.3s, box-shadow 0.3s;
+  box-shadow: 0 2px 12px #e3f1e6;
+  animation: pulse 1.5s infinite;
+}
+.vdp-btn-xxxl:hover {
+  background: #1a936f !important;
+  color: #fff !important;
+  box-shadow: 0 8px 24px -8px #1a936f;
+}
+.animated { animation-duration: 1s; animation-fill-mode: both; }
+@keyframes fadeInDown { from { opacity: 0; transform: translateY(-60px);} to { opacity: 1; transform: none;} }
+@keyframes fadeInLeft { from { opacity: 0; transform: translateX(-60px);} to { opacity: 1; transform: none;} }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes bounceIn { 0% { opacity: 0; transform: scale(0.3);} 50% { opacity: 1; transform: scale(1.05);} 70% { transform: scale(0.9);} 100% { transform: scale(1);} }
+@keyframes pulse { 0% { box-shadow: 0 0 0 0 #d62828;} 70% { box-shadow: 0 0 0 10px rgba(214,40,40,0);} 100% { box-shadow: 0 0 0 0 #d62828;} }
+.animated.fadeInDown { animation-name: fadeInDown; }
+.animated.fadeInLeft { animation-name: fadeInLeft; }
+.animated.bounceIn { animation-name: bounceIn; }
+.animated.pulse { animation-name: pulse; animation-iteration-count: infinite; animation-duration: 1.5s; }
+@media (max-width: 1200px) {
+  .vdp-form-xxxl-card { padding: 12px !important; }
+  .vdp-form-xxxl-title { font-size: 1.6em; }
+}
+@media (max-width: 900px) {
+  .vdp-form-xxxl-card { padding: 0 !important; }
+  .vdp-form-xxxl-title { font-size: 1.2em; }
+  .vdp-section-xxxl-title { font-size: 1em; }
+}
+@media (max-width: 700px) {
+  .vdp-form-xxxl-card { padding: 0 !important; }
+  .vdp-form-xxxl-title { font-size: 1em; }
+  .vdp-section-xxxl-title { font-size: 0.95em; }
+}
+  .vdp-form-xxxl-card { padding: 0 !important; }
+  .vdp-form-xxxl-title { font-size: 1.5em; }
+  .vdp-section-xxxl-title { font-size: 1.1em; }
+@media (max-width: 700px) {
+  .vdp-form-xxxl-card { padding: 0 !important; }
+  .vdp-form-xxxl-title { font-size: 1.1em; }
+  .vdp-section-xxxl-title { font-size: 1em; }
+}
+
+/* Styles de cadre pour la fiche */
+.vdp-form-media-frame {
+  width: 196px;
+  height: 196px;
+  border: 1px solid #cfe4d2;
+  border-radius: 16px;
+  background: #f9fffb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.vdp-form-media-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.vdp-form-media-placeholder {
+  color: #9fb0a2;
+  text-align: center;
+  padding: 0 12px;
+}

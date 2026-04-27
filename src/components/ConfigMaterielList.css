@@ -1,0 +1,25 @@
+/* src/components/ConfigMaterielList.css */
+.config-materiel-list-container {
+    padding: 20px;
+    margin: 0 auto;
+    max-width: 1000px;
+    background-color: #fff;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  
+  .config-materiel-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .config-materiel-list-header h2 {
+    margin: 0;
+  }
+  
+  .ant-table {
+    margin-top: 20px;
+  }
+  

@@ -1,0 +1,75 @@
+{
+  "sources_dotation": [
+    {
+      "id": 1,
+      "nom": "Pre-BVDP",
+      "details": "Dotations antérieures",
+      "uuid": "dd6381ec-684a-40b4-adc4-1523bba95641",
+      "updated_at": "2025-09-15 12:09:27",
+      "synced": 0,
+      "deleted_at": null
+    },
+    {
+      "id": 2,
+      "nom": "BVDP",
+      "details": "Dotations BVDP",
+      "uuid": "682a79e7-646e-451f-a2b0-517003a83bb2",
+      "updated_at": "2025-09-15 12:09:27",
+      "synced": 0,
+      "deleted_at": null
+    },
+    {
+      "id": 3,
+      "nom": "Autre entité",
+      "details": "Dotations autres",
+      "uuid": "d1da2088-99bb-43ac-bfac-50ac2e3a2581",
+      "updated_at": "2025-09-15 12:09:27",
+      "synced": 0,
+      "deleted_at": null
+    }
+  ],
+  "sources_armes": [
+    {
+      "id": 1,
+      "code": null,
+      "nom": "LOT ALPHA",
+      "description": "ARMEMENT DOTE AVANT LA BVDP PAR LA DCMA",
+      "provenance": null,
+      "source_dotation_id": null,
+      "date_reception": "2019-10-11",
+      "date_cloture": null,
+      "uuid": null,
+      "updated_at": "2025-10-11 19:37:47",
+      "synced": null,
+      "deleted_at": null
+    },
+    {
+      "id": 2,
+      "code": null,
+      "nom": "LOT BETA",
+      "description": "ARMENT DOTE PAR LA BVDP",
+      "provenance": null,
+      "source_dotation_id": null,
+      "date_reception": null,
+      "date_cloture": null,
+      "uuid": null,
+      "updated_at": "2025-10-11 19:38:40",
+      "synced": null,
+      "deleted_at": null
+    },
+    {
+      "id": 3,
+      "code": "CR-CRDC",
+      "nom": "fdffgd",
+      "description": null,
+      "provenance": null,
+      "source_dotation_id": null,
+      "date_reception": null,
+      "date_cloture": null,
+      "uuid": null,
+      "updated_at": "2025-11-12 11:49:03",
+      "synced": 0,
+      "deleted_at": null
+    }
+  ]
+}

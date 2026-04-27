@@ -1,0 +1,42 @@
+.coord-communale-list-container {
+  background: #f8fafc;
+  min-height: 100vh;
+  padding: 24px;
+}
+.coord-communale-list-card {
+  box-shadow: 0 2px 12px #e6f7ff;
+  border-radius: 12px;
+}
+.coord-communale-table th, .coord-communale-table td {
+  font-size: 15px;
+}
+.coord-communale-table tr:nth-child(even) {
+  background: #f6faff;
+}
+.coord-communale-table tr:hover {
+  background: #e6f7ff;
+}
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .print-area, .print-area * {
+    visibility: visible;
+  }
+  .print-area {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px;
+    background: #fff;
+  }
+  .no-print {
+    display: none;
+  }
+  .summary-table th,
+  .summary-table td {
+    font-size: 16px;
+    padding: 8px;
+  }
+}

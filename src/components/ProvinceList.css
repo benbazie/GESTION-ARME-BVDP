@@ -1,0 +1,182 @@
+/* ProvinceList.css */
+
+/* Définition de variables pour faciliter l'ajustement */
+:root {
+  --primary: #0077cc;       /* Bleu principal */
+  --secondary: #00a2ff;      /* Bleu secondaire */
+  --accent: #00e676;         /* Vert néon */
+  --bg-light: #edf2f7;       /* Gris très léger */
+  --bg-white: #ffffff;
+  --text-color: #333;
+  --font-title: 'Orbitron', sans-serif;
+  --font-body: 'Roboto', sans-serif;
+  --transition-speed: 0.3s;
+}
+
+/* Conteneur global */
+.province-list-container {
+  padding: 30px;
+  max-width: 1200px;
+  margin: 40px auto;
+  background: linear-gradient(135deg, var(--bg-light), var(--bg-white));
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  font-family: var(--font-title);
+  color: var(--text-color);
+  transition: all var(--transition-speed) ease;
+}
+
+/* Titre de la page */
+.province-list-title {
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 40px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--primary);
+  border-bottom: 2px solid var(--primary);
+  padding-bottom: 10px;
+}
+
+/* Ligne d'en-tête : filtres et bouton d'ajout */
+.province-header-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 20px;
+  margin-bottom: 20px;
+}
+
+/* Groupe de filtres */
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.filter-label {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+/* Sélecteur de filtre */
+.province-filter-select {
+  width: 180px;
+  font-size: 16px;
+  padding: 8px;
+  background: var(--bg-white);
+  color: var(--text-color);
+  border: 1px solid var(--primary);
+  border-radius: 4px;
+  transition: border var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+}
+
+.province-filter-select:focus,
+.province-filter-select:hover {
+  border-color: var(--secondary);
+  box-shadow: 0 0 8px rgba(0, 95, 163, 0.4);
+}
+
+/* Champ de recherche */
+.search-input {
+  width: 100%;
+  max-width: 220px;
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid var(--primary);
+  border-radius: 4px;
+  transition: border var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+}
+
+.search-input:focus,
+.search-input:hover {
+  border-color: var(--secondary);
+  box-shadow: 0 0 8px rgba(0, 95, 163, 0.4);
+}
+
+/* Bouton d'ajout */
+.add-btn {
+  font-size: 16px;
+  width: 180px;
+  padding: 10px;
+  background: var(--secondary);
+  color: var(--bg-white);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 176, 255, 0.6);
+  transition: background var(--transition-speed) ease, transform var(--transition-speed) ease;
+}
+
+.add-btn:hover {
+  background: var(--primary);
+  transform: scale(1.05);
+}
+
+/* Tableau principal */
+.province-list-table {
+  background: var(--bg-white);
+  color: var(--text-color);
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+  margin-top: 20px;
+}
+
+.ant-table-tbody > tr > td {
+  padding: 8px 12px !important;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+/* Zone de résumé */
+.province-summary {
+  margin-top: 30px;
+  text-align: center;
+  font-size: 20px;
+  color: var(--primary);
+  padding: 15px;
+  border-top: 2px solid var(--primary);
+}
+
+.province-summary-title {
+  margin-bottom: 10px;
+  font-size: 28px;
+  color: var(--primary);
+}
+
+/* Tableau résumé */
+.summary-table {
+  width: 60%;
+  margin: 0 auto;
+  border-collapse: collapse;
+  background: var(--bg-white);
+  color: var(--text-color);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+}
+
+.summary-table th,
+.summary-table td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  font-size: 16px;
+  text-align: center;
+}
+
+.summary-table th {
+  background-color: var(--primary);
+  color: var(--bg-white);
+  font-weight: 600;
+}
+
+/* Cellules spécifiques (ex: pour Region ou Province) */
+.region-cell,
+.province-cell {
+  text-align: center;
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--primary);
+}

@@ -1,0 +1,46 @@
+/* src/components/DotationMaterielSpecifiqueList.css */
+.dotation-materiel-specifique-list {
+    padding: 20px;
+    background-color: #f7f9fc;
+  }
+  
+  .filter-card {
+    margin-bottom: 20px;
+    background-color: #ffffff;
+    border: 1px solid #e0e6ed;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+  }
+  
+  .list-card {
+    background-color: #ffffff;
+    border: 1px solid #e0e6ed;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+    overflow-x: auto;
+  }
+  
+  .ant-table-thead > tr > th {
+    background-color: #e3f2fd;
+    font-weight: bold;
+  }
+  
+  .vdp-reference, .entite-reference {
+    font-size: 14px;
+  }
+  
+  .vdp-details, .entite-details {
+    font-size: 12px;
+    color: #555;
+  }
+  
+  .status-active {
+    color: #52c41a;
+    font-weight: bold;
+  }
+  
+  .status-inactive {
+    color: #faad14;
+    font-weight: bold;
+  }
+  

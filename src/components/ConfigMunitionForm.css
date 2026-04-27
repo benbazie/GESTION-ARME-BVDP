@@ -1,0 +1,47 @@
+/* ConfigMunitionForm.css */
+
+/* Conteneur principal du formulaire */
+.config-munition-form-container {
+  padding: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Style global pour la Card utilisée dans le formulaire */
+.ant-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  border: none;
+}
+
+/* Titre de la Card : alignement et espacement */
+.ant-card-head-title {
+  font-size: 18px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+}
+
+/* Bouton de retour dans le titre */
+.ant-card-head .ant-btn-link {
+  margin-right: 10px;
+  font-size: 18px;
+}
+
+/* Espacement entre les éléments du formulaire */
+.ant-form-item {
+  margin-bottom: 16px;
+}
+
+/* Style des inputs pour un rendu moderne */
+.ant-input, .ant-input-textarea {
+  border-radius: 4px;
+  padding: 8px;
+  font-size: 14px;
+}
+
+/* Bouton de soumission en largeur pleine */
+.ant-form-item button {
+  width: 100%;
+  height: 40px;
+}

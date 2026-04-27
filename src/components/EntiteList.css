@@ -1,0 +1,178 @@
+/* EntiteList.css */
+
+/* Conteneur principal avec fond clair et bordures arrondies */
+.entite-list-container {
+  position: relative;
+  max-width: 1200px;
+  margin: 10px auto;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  font-family: 'Roboto', sans-serif;
+}
+
+/* Vidéo de fond en arrière-plan */
+.video-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1;
+  opacity: 0.25; /* Ajustez l'opacité pour un effet subtil */
+}
+
+/* Zone de contenu pour que la vidéo reste en arrière-plan */
+.content-overlay {
+  position: relative;
+  z-index: 1;
+  padding: 20px;
+}
+
+/* Titre animé en majuscules */
+.page-title {
+  text-align: center;
+  color: #333;
+  font-size: 2.5rem;
+  margin: 0 0 20px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  animation: slideInDown 0.8s ease-out;
+}
+
+@keyframes slideInDown {
+  from {
+    transform: translateY(-30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Conteneur des filtres */
+.filter-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  margin-bottom: 15px;
+}
+
+/* Chaque élément de filtre possède une icône et le Select */
+.filter-item {
+  display: flex;
+  align-items: center;
+}
+
+.filter-icon {
+  margin-right: 4px;
+  color: #555;
+}
+
+/* Boutons d'action et zone d'en-tête */
+.action-buttons,
+.header-actions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.animated-button {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.animated-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Personnalisation de l'onglet principal */
+.main-tabs .ant-tabs-nav {
+  margin-bottom: 10px;
+}
+
+/* Styles pour le tableau */
+.futuristic-table {
+  width: 100%;
+  table-layout: auto;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.futuristic-table .ant-table-thead > tr > th {
+  background-color: #f0f0f0;
+  color: #333;
+  font-weight: bold;
+  padding: 10px;
+  border: 1px solid #ccc;
+  text-align: center;
+}
+
+.futuristic-table .ant-table-tbody > tr > td {
+  background-color: #fff;
+  color: #333;
+  padding: 8px;
+  border: 1px solid #ccc;
+  text-align: left;
+  word-break: break-word;
+}
+
+.futuristic-table .ant-table-cell {
+  vertical-align: middle;
+}
+
+/* Styles des récapitulatifs sous forme de tableaux */
+.recap {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.recap h3 {
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.recap table {
+  margin: 0 auto;
+  width: 100%;
+  max-width: 600px;
+  border-collapse: collapse;
+}
+
+.recap th,
+.recap td {
+  border: 1px solid #ccc;
+  padding: 5px;
+  text-align: center;
+}
+
+.recap th {
+  background-color: #f0f0f0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .filter-container,
+  .action-buttons,
+  .header-actions {
+    flex-direction: column;
+  }
+
+  .filter-item {
+    width: 100%;
+    justify-content: center;
+  }
+}

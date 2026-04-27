@@ -1,0 +1,103 @@
+.coordination-communale-form {
+  background: #fafdff;
+  padding: 48px 36px 36px 36px;
+  border-radius: 18px;
+  max-width: 540px;
+  margin: 48px auto 32px auto;
+  box-shadow: 0 8px 32px 0 rgba(24, 144, 255, 0.13), 0 2px 8px 0 rgba(0,0,0,0.06);
+  border: 1.5px solid #e6f7ff;
+  position: relative;
+  transition: box-shadow 0.2s;
+}
+
+.coordination-communale-form:hover {
+  box-shadow: 0 12px 40px 0 rgba(24, 144, 255, 0.18), 0 4px 16px 0 rgba(0,0,0,0.08);
+}
+
+.coordination-communale-form .ant-form-item-label > label {
+  font-weight: 700;
+  color: #1677ff;
+  font-size: 1.13em;
+  letter-spacing: 0.01em;
+  text-shadow: 0 1px 0 #f0faff;
+}
+
+.coordination-communale-form .ant-form-item {
+  margin-bottom: 26px;
+}
+
+.coordination-communale-form .ant-input,
+.coordination-communale-form .ant-select-selector,
+.coordination-communale-form .ant-select-selection-search-input {
+  border-radius: 10px !important;
+  min-height: 42px;
+  font-size: 1.08em;
+  background: #f7fbff;
+  border: 1.5px solid #d6eaff !important;
+  transition: border 0.2s;
+}
+
+.coordination-communale-form .ant-input:focus,
+.coordination-communale-form .ant-select-focused .ant-select-selector {
+  border-color: #1890ff !important;
+  box-shadow: 0 0 0 2px rgba(24,144,255,0.08);
+}
+
+.coordination-communale-form .ant-select-multiple .ant-select-selection-item {
+  background: #e6f7ff;
+  color: #1677ff;
+  border-radius: 7px;
+  font-weight: 500;
+  font-size: 1em;
+  border: 1px solid #b5e3ff;
+}
+
+.coordination-communale-form .ant-btn-primary {
+  background: linear-gradient(90deg, #1890ff 0%, #40a9ff 100%);
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 1.13em;
+  box-shadow: 0 2px 12px rgba(24,144,255,0.10);
+  transition: background 0.2s, box-shadow 0.2s;
+  padding: 0 32px;
+  min-height: 42px;
+}
+
+.coordination-communale-form .ant-btn-primary:hover,
+.coordination-communale-form .ant-btn-primary:focus {
+  background: linear-gradient(90deg, #40a9ff 0%, #1890ff 100%);
+  box-shadow: 0 4px 16px rgba(24,144,255,0.13);
+}
+
+.coordination-communale-form .ant-form-item-explain-error {
+  font-size: 1em;
+  color: #ff4d4f;
+  margin-top: 2px;
+}
+
+.coordination-communale-form .ant-form-item-label {
+  padding-bottom: 2px;
+}
+
+.coordination-communale-form .ant-form-item-control-input {
+  min-height: 42px;
+}
+
+.coordination-communale-form .ant-form-item-required::before {
+  display: none !important;
+}
+
+.coordination-communale-form .ant-form-item-label > label.ant-form-item-required::after {
+  content: " *";
+  color: #ff4d4f;
+  font-weight: 700;
+  margin-left: 2px;
+}
+
+@media (max-width: 600px) {
+  .coordination-communale-form {
+    padding: 24px 8px 16px 8px;
+    max-width: 98vw;
+  }
+}

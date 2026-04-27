@@ -1,0 +1,95 @@
+/* src/components/Login.css */
+
+/* 1) Fullscreen centré avec motif militaire dégradé */
+@keyframes camouflageGradient {
+  0%   { background-position: 0% 0%; }
+  50%  { background-position: 100% 100%; }
+  100% { background-position: 0% 0%; }
+}
+.login-page {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(
+    135deg,
+    #556b2f 0%,
+    #83956b 25%,
+    #c2b280 50%,
+    #83956b 75%,
+    #556b2f 100%
+  );
+  background-size: 200% 200%;
+  animation: camouflageGradient 15s ease infinite;
+}
+
+/* 2) Carte intérieur claire */
+.login-card {
+  width: 380px;
+  padding: 32px 24px;
+  border-radius: 8px;
+  background: #f9f9f2;   /* fond clair neutre */
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  color: #2f3e2f;
+}
+
+/* 3) Supprime tout overlay sombre interne */
+.login-card .ant-card-body {
+  background: transparent;
+}
+
+/* 4) Logo animé (pulse) */
+@keyframes pulseLogo {
+  0%, 100% { transform: scale(1);   opacity: 0.9; }
+  50%       { transform: scale(1.1); opacity: 1;   }
+}
+.login-logo {
+  width: 90px;
+  margin: 0 auto 20px;
+  display: block;
+  animation: pulseLogo 3s ease-in-out infinite;
+}
+
+/* 5) Titre et footer couleurs militaires claires */
+.login-title {
+  margin-bottom: 24px !important;
+  color: #3d5229;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+.login-footer {
+  display: block;
+  margin-top: 24px;
+  color: #5a6b5a !important;
+}
+
+/* 6) Champs de saisie clairs */
+.login-form .ant-form-item {
+  margin-bottom: 16px;
+}
+.login-form .ant-input,
+.login-form .ant-input-password {
+  background: #fff;
+  color: #2f3e2f;
+  border: 1px solid #83956b;
+}
+.login-form .ant-input::placeholder,
+.login-form .ant-input-password::placeholder {
+  color: #8f9779;
+}
+
+/* 7) Bouton stylé kaki */
+.login-submit .ant-btn-primary {
+  background: #6b8f6b;
+  border-color: #5a7a5a;
+  height: 48px;
+}
+.login-submit .ant-btn-primary:hover {
+  background: #7aa07a;
+  border-color: #6b8c6b;
+}
+
+/* 8) Alert d’erreur avec léger padding */
+.login-error {
+  margin-bottom: 16px;
+}

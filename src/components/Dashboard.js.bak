@@ -1,0 +1,424 @@
+// Dashboard.jsx
+import React, { useState, useEffect } from 'react'
+import {
+  Form,
+  Select,
+  DatePicker,
+  Row,
+  Col,
+  Card,
+  Statistic,
+  Tabs,
+  Table,
+  Spin,
+  Alert
+} from 'antd'
+import ReactEcharts from 'echarts-for-react'
+import './Dashboard.css'
+
+const { Option } = Select
+const { RangePicker } = DatePicker
+const { TabPane } = Tabs
+
+export default function Dashboard() {
+  const [filters, setFilters]     = useState({ region: '', entity: '', dateRange: [] })
+  const [regions, setRegions]     = useState([])
+  const [entities, setEntities]   = useState([])
+  const [summary, setSummary]     = useState({})
+  const [charts, setCharts]       = useState({})
+  const [activities, setActivities] = useState([])
+  const [loading, setLoading]     = useState(true)
+  const [error, setError]         = useState(null)
+
+  // Charger régions & entités
+  useEffect(() => {
+    window.electronAPI.getRegions().then(setRegions).catch(console.error)
+    window.electronAPI.getEntites().then(setEntities).catch(console.error)
+  }, [])
+
+  // Charger toutes les données
+  useEffect(() => {
+    async function fetchAll() {
+      setLoading(true)
+      setError(null)
+      try {
+        const params = {
+          region: filters.region,
+          entity: filters.entity,
+          startDate: filters.dateRange[0]?.format('YYYY-MM-DD'),
+          endDate: filters.dateRange[1]?.format('YYYY-MM-DD')
+        }
+
+        // KPI Summary
+        const [
+          armes,
+          munitions,
+          materiel,
+          dotations,
+          vdp
+        ] = await Promise.all([
+          window.electronAPI.getDashboardArmes(params),
+          window.electronAPI.callAPI('get', '/dashboard/munitions/summary', params),
+          window.electronAPI.callAPI('get', '/dashboard/materiel/summary', params),
+          window.electronAPI.getDashboardDotations(params),
+          window.electronAPI.getDashboardVdp(params)
+        ])
+
+        setSummary({
+          armes:    armes.total || 0,
+          munitions: munitions.total || 0,
+          materiel:  materiel.total || 0,
+          dotations: dotations.total || 0,
+          vdp:      vdp.total || 0
+        })
+
+        // Graph Data
+        const [
+          byTypeArmes,
+          byCatArmes,
+          byStatusArmes,
+          timeArmes,
+          byTypeMunitions,
+          timeMunitions,
+          byTypeMateriel,
+          timeMateriel,
+          byResDotation,
+          timeDotations,
+          byGenresVdp,
+          byAgeVdp,
+          byEntiteVdp
+        ] = await Promise.all([
+          window.electronAPI.callAPI('get', '/dashboard/armes/by-type', params),
+          window.electronAPI.callAPI('get', '/dashboard/armes/by-category', params),
+          window.electronAPI.callAPI('get', '/dashboard/armes/by-status', params),
+          window.electronAPI.callAPI('get', '/dashboard/armes/timeseries', params),
+          window.electronAPI.callAPI('get', '/dashboard/munitions/by-type', params),
+          window.electronAPI.callAPI('get', '/dashboard/munitions/timeseries', params),
+          window.electronAPI.callAPI('get', '/dashboard/materiel/by-type', params),
+          window.electronAPI.callAPI('get', '/dashboard/materiel/timeseries', params),
+          window.electronAPI.callAPI('get', '/dashboard/dotations/by-resource', params),
+          window.electronAPI.callAPI('get', '/dashboard/dotations/timeseries', params),
+          window.electronAPI.callAPI('get', '/dashboard/vdp/by-gender', params),
+          window.electronAPI.callAPI('get', '/dashboard/vdp/by-age-group', params),
+          window.electronAPI.callAPI('get', '/dashboard/vdp/by-entity', params)
+        ])
+
+        setCharts({
+          armes: {
+            byType:   byTypeArmes,
+            byCat:    byCatArmes,
+            byStatus: byStatusArmes,
+            time:     timeArmes
+          },
+          munitions: {
+            byType: byTypeMunitions,
+            time:   timeMunitions
+          },
+          materiel: {
+            byType: byTypeMateriel,
+            time:   timeMateriel
+          },
+          dotations: {
+            byRes: byResDotation,
+            time:  timeDotations
+          },
+          vdp: {
+            byGender: byGenresVdp,
+            byAge:    byAgeVdp,
+            byEntite: byEntiteVdp
+          }
+        })
+
+        // Recent activities
+        const actResp = await window.electronAPI.getDashboardRecentActivities(params)
+        setActivities(actResp)
+
+      } catch (err) {
+        console.error(err)
+        setError(err)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchAll()
+  }, [filters])
+
+  // ECharts helpers
+  const pieOption = (title, data) => ({
+    title:   { text: title, left: 'center' },
+    tooltip: { trigger: 'item' },
+    legend:  { orient: 'vertical', left: 'left' },
+    series:  [{ type: 'pie', radius: '50%', data }]
+  })
+
+  const barOption = (title, xData, yData) => ({
+    title:   { text: title, left: 'center' },
+    tooltip: { trigger: 'axis' },
+    xAxis:   { type: 'category', data: xData },
+    yAxis:   { type: 'value' },
+    series:  [{ type: 'bar', data: yData }]
+  })
+
+  const lineOption = (title, xData, yData) => ({
+    title:   { text: title, left: 'center' },
+    tooltip: { trigger: 'axis' },
+    xAxis:   { type: 'category', data: xData },
+    yAxis:   { type: 'value' },
+    series:  [{ type: 'line', data: yData }]
+  })
+
+  const activityColumns = [
+    { title: 'ID',     dataIndex: 'id',       key: 'id' },
+    { title: 'Action', dataIndex: 'action',   key: 'action' },
+    { title: 'Table',  dataIndex: 'table',    key: 'table' },
+    { title: 'Date',   dataIndex: 'timestamp',key: 'timestamp' }
+  ]
+
+  if (loading)
+    return <Spin tip="Chargement du dashboard…" style={{ width: '100%', marginTop: 100 }} />
+  if (error)
+    return <Alert type="error" message="Erreur de chargement" description={error.toString()} />
+
+  return (
+    <div className="dashboard-container">
+      {/* Ajout du grand titre */}
+      <h1 style={{
+        fontSize: "2.6rem",
+        fontWeight: "bold",
+        textAlign: "center",
+        margin: "32px 0 24px 0",
+        color: "#001529",
+        letterSpacing: "2px"
+      }}>
+        Tableau de bord
+      </h1>
+      {/* Filtres */}
+      <Card size="small" style={{ marginBottom: 16 }}>
+        <Form layout="inline" onValuesChange={(_, v) => setFilters(v)}>
+          <Form.Item name="region" label="Région">
+            <Select allowClear style={{ width: 160 }}>
+              {regions.map(r => (
+                <Option key={r.id} value={r.id}>{r.nom}</Option>
+              ))}
+            </Select>
+          </Form.Item>
+          <Form.Item name="entity" label="Entité">
+            <Select allowClear style={{ width: 200 }}>
+              {entities.map(e => (
+                <Option key={e.id} value={e.id}>{e.nom}</Option>
+              ))}
+            </Select>
+          </Form.Item>
+          <Form.Item name="dateRange" label="Période">
+            <RangePicker />
+          </Form.Item>
+        </Form>
+      </Card>
+
+      {/* KPI */}
+      <Row gutter={16} style={{ marginBottom: 16 }}>
+        <Col span={4}>
+          <Card><Statistic title="Total Armes" value={summary.armes} /></Card>
+        </Col>
+        <Col span={4}>
+          <Card><Statistic title="Total Munitions" value={summary.munitions} /></Card>
+        </Col>
+        <Col span={4}>
+          <Card><Statistic title="Total Matériel" value={summary.materiel} /></Card>
+        </Col>
+        <Col span={4}>
+          <Card><Statistic title="Total Dotations" value={summary.dotations} /></Card>
+        </Col>
+        <Col span={4}>
+          <Card><Statistic title="Total VDP" value={summary.vdp} /></Card>
+        </Col>
+      </Row>
+
+      <Tabs type="card">
+        {/* Armes */}
+        <TabPane tab="Armes" key="armes">
+          <Row gutter={16}>
+            <Col span={8}>
+              <Card>
+                <ReactEcharts
+                  option={pieOption('Par Type', charts.armes.byType)}
+                  style={{ height: 300 }}
+                />
+              </Card>
+            </Col>
+            <Col span={8}>
+              <Card>
+                <ReactEcharts
+                  option={pieOption('Par Catégorie', charts.armes.byCat)}
+                  style={{ height: 300 }}
+                />
+              </Card>
+            </Col>
+            <Col span={8}>
+              <Card>
+                <ReactEcharts
+                  option={pieOption('Par Statut', charts.armes.byStatus)}
+                  style={{ height: 300 }}
+                />
+              </Card>
+            </Col>
+          </Row>
+          <Row gutter={16} style={{ marginTop: 16 }}>
+            <Col span={24}>
+              <Card>
+                <ReactEcharts
+                  option={lineOption(
+                    'Évolution des Armes',
+                    charts.armes.time.map(d => d.date),
+                    charts.armes.time.map(d => d.total)
+                  )}
+                  style={{ height: 300 }}
+                />
+              </Card>
+            </Col>
+          </Row>
+        </TabPane>
+
+        {/* Munitions */}
+        <TabPane tab="Munitions" key="munitions">
+          <Row gutter={16}>
+            <Col span={12}>
+              <Card title="Par Type">
+                <ReactEcharts
+                  option={barOption(
+                    'Munitions par Type',
+                    charts.munitions.byType.map(i => i.type),
+                    charts.munitions.byType.map(i => i.total)
+                  )}
+                  style={{ height: 300 }}
+                />
+              </Card>
+            </Col>
+            <Col span={12}>
+              <Card title="Évolution">
+                <ReactEcharts
+                  option={lineOption(
+                    'Consommation de Munitions',
+                    charts.munitions.time.map(d => d.date),
+                    charts.munitions.time.map(d => d.total)
+                  )}
+                  style={{ height: 300 }}
+                />
+              </Card>
+            </Col>
+          </Row>
+        </TabPane>
+
+        {/* Matériel */}
+        <TabPane tab="Matériel" key="materiel">
+          <Row gutter={16}>
+            <Col span={12}>
+              <Card title="Par Type">
+                <ReactEcharts
+                  option={barOption(
+                    'Matériel par Type',
+                    charts.materiel.byType.map(i => i.category),
+                    charts.materiel.byType.map(i => i.total)
+                  )}
+                  style={{ height: 300 }}
+                />
+              </Card>
+            </Col>
+            <Col span={12}>
+              <Card title="Évolution">
+                <ReactEcharts
+                  option={lineOption(
+                    'Entrées de Matériel',
+                    charts.materiel.time.map(d => d.date),
+                    charts.materiel.time.map(d => d.total)
+                  )}
+                  style={{ height: 300 }}
+                />
+              </Card>
+            </Col>
+          </Row>
+        </TabPane>
+
+        {/* Dotations */}
+        <TabPane tab="Dotations" key="dotations">
+          <Row gutter={16}>
+            <Col span={12}>
+              <Card title="Par Ressource">
+                <ReactEcharts
+                  option={barOption(
+                    'Dotations par Ressource',
+                    charts.dotations.byRes.map(i => i.resource),
+                    charts.dotations.byRes.map(i => i.total)
+                  )}
+                  style={{ height: 300 }}
+                />
+              </Card>
+            </Col>
+            <Col span={12}>
+              <Card title="Évolution">
+                <ReactEcharts
+                  option={lineOption(
+                    'Historique des Dotations',
+                    charts.dotations.time.map(d => d.date),
+                    charts.dotations.time.map(d => d.total)
+                  )}
+                  style={{ height: 300 }}
+                />
+              </Card>
+            </Col>
+          </Row>
+        </TabPane>
+
+        {/* VDP */}
+        <TabPane tab="VDP" key="vdp">
+          <Row gutter={16}>
+            <Col span={8}>
+              <Card>
+                <ReactEcharts
+                  option={pieOption(
+                    'Répartition par Genre',
+                    charts.vdp.byGender.map(i => ({ name: i.gender, value: i.total }))
+                  )}
+                  style={{ height: 300 }}
+                />
+              </Card>
+            </Col>
+            <Col span={8}>
+              <Card>
+                <ReactEcharts
+                  option={pieOption(
+                    'Répartition par Tranche d’Âge',
+                    charts.vdp.byAge.map(i => ({ name: i.age_group, value: i.total }))
+                  )}
+                  style={{ height: 300 }}
+                />
+              </Card>
+            </Col>
+            <Col span={8}>
+              <Card>
+                <ReactEcharts
+                  option={barOption(
+                    'Recrues par Entité',
+                    charts.vdp.byEntite.map(i => i.entity),
+                    charts.vdp.byEntite.map(i => i.total)
+                  )}
+                  style={{ height: 300 }}
+                />
+              </Card>
+            </Col>
+          </Row>
+        </TabPane>
+      </Tabs>
+
+      {/* Activités récentes */}
+      <Card title="Activités récentes" style={{ marginTop: 16 }}>
+        <Table
+          dataSource={activities}
+          columns={activityColumns}
+          rowKey="id"
+          pagination={{ pageSize: 5 }}
+        />
+      </Card>
+    </div>
+  )
+}

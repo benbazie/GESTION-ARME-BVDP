@@ -1,0 +1,25 @@
+/* ConfigOptiqueList.css */
+.config-optique-list-container {
+    padding: 20px;
+    margin: 0 auto;
+    max-width: 1000px;
+    background-color: #ffffff;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  
+  .config-optique-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .config-optique-list-header h2 {
+    margin: 0;
+  }
+  
+  .ant-table {
+    margin-top: 20px;
+  }
+  

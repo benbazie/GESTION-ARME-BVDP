@@ -1,0 +1,111 @@
+@import "./MunitionForm.css";
+
+/* Conteneur principal */
+.optique-form-container {
+  padding: 24px;
+  background-color: #f9f9f9;
+  min-height: 100vh;
+}
+
+/* Carte du formulaire */
+.optique-form-card {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 24px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Titre du formulaire */
+.optique-form-title {
+  text-align: center;
+  color: #333333;
+  margin-bottom: 16px;
+}
+
+/* Texte d'information */
+.optique-form-info {
+  display: block;
+  text-align: center;
+  color: #666666;
+  margin-bottom: 24px;
+  font-size: 14px;
+}
+
+/* Champs du formulaire */
+.optique-form .ant-form-item {
+  margin-bottom: 16px;
+}
+
+/* Bouton principal */
+.optique-form .ant-btn-primary {
+  background-color: #0077cc;
+  border-color: #0077cc;
+}
+
+.optique-form .ant-btn-primary:hover {
+  background-color: #005fa3;
+  border-color: #005fa3;
+}
+
+/* Bouton de retour */
+.optique-form-container .ant-btn-default {
+  color: #0077cc;
+  border-color: #0077cc;
+}
+
+.optique-form-container .ant-btn-default:hover {
+  color: #005fa3;
+  border-color: #005fa3;
+}
+
+/* Espacement entre les colonnes */
+.ant-row > .ant-col {
+  padding: 0 8px;
+}
+
+.optique-form-page {
+  min-height: 100vh;
+  padding: 48px 18px 80px;
+  background: linear-gradient(182deg, #f7fbff 0%, #e5f1ff 100%);
+}
+
+.optique-form-shell {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 32px 36px 44px;
+  border-radius: 26px;
+  background: #ffffff;
+  border: 1px solid rgba(108, 164, 228, 0.28);
+  box-shadow: 0 38px 70px -44px rgba(40, 92, 160, 0.42);
+  color: #244366;
+}
+
+.optique-form-progress-card,
+.optique-form-card {
+  border-radius: 22px;
+  background: rgba(244, 250, 255, 0.96);
+  border: 1px solid rgba(96, 160, 226, 0.24);
+  box-shadow: 0 26px 46px -36px rgba(68, 122, 188, 0.32);
+}
+
+.optique-form .ant-form-item-label > label {
+  color: #315a80;
+  font-weight: 600;
+}
+
+.optique-form .ant-input,
+.optique-form .ant-select-selector,
+.optique-form .ant-picker {
+  background: #ffffff !important;
+  border: 1px solid rgba(108, 162, 224, 0.32) !important;
+}
+
+.optique-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 18px;
+  border-top: 1px solid rgba(104, 160, 225, 0.28);
+  padding-top: 18px;
+}

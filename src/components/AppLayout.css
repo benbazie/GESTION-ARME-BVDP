@@ -1,0 +1,192 @@
+/* Import de la police Orbitron pour un style futuriste */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+body {
+  margin: 0;
+  font-family: 'Orbitron', sans-serif;
+  background-color: #e6e6e6;
+}
+
+/* Global layout */
+.app-layout {
+  background-color: #f0f0f0;
+  min-height: 100vh;
+}
+
+/* Sidebar */
+.sider {
+  background-color: #1b1f24;
+}
+
+.logo {
+  text-align: center;
+  padding: 20px;
+  font-size: 1.5rem;
+  font-family: 'Orbitron', sans-serif;
+  /* Couleur or atténuée */
+  color: #d4af37;
+  background: linear-gradient(90deg, #d62828, #1a936f);
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  animation: pulseLogo 2s infinite;
+}
+
+@keyframes pulseLogo {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* Header */
+.app-header {
+  background: linear-gradient(90deg, #0f4c75, #3282b8);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+}
+
+.toggle-button {
+  margin-right: 15px;
+  font-size: 1.2rem;
+}
+
+.header-title .main-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+  /* Couleur atténuée, moins brillante */
+  color: #d4af37;
+  text-shadow: 0 0 5px rgba(212, 175, 55, 0.6);
+  animation: subtleNeon 1.5s infinite alternate;
+}
+
+@keyframes subtleNeon {
+  from {
+    opacity: 0.9;
+    filter: brightness(1);
+  }
+  to {
+    opacity: 1;
+    filter: brightness(1.1);
+  }
+}
+
+/* Header right: horloge et menu utilisateur */
+.header-right {
+  display: flex;
+  align-items: center;
+}
+
+.time-display {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.2rem;
+  color: #e8f1f5;
+  margin-right: 20px;
+  transition: transform 0.5s, color 0.5s;
+}
+
+.time-display:hover {
+  color: #ffd166;
+  transform: scale(1.1);
+}
+
+/* Horizontal menu */
+.horizontal-menu {
+  background: #fff;
+}
+.horizontal-menu .ant-menu-item, 
+.horizontal-menu .ant-menu-submenu-title {
+  font-size: 1rem;
+  color: #333;
+  font-weight: 500;
+}
+.horizontal-menu .ant-menu-item-selected {
+  background-color: #0f4c75 !important;
+  color: #fff !important;
+}
+
+.menu-abr {
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  font-size: 15px;
+  transition: color 0.2s;
+}
+
+.ant-menu-item .anticon,
+.ant-menu-submenu-title .anticon {
+  transition: color 0.2s, transform 0.2s;
+}
+
+.ant-menu-item-selected .anticon,
+.ant-menu-submenu-selected .anticon {
+  color: #ffd166 !important;
+  transform: scale(1.15) rotate(-8deg);
+}
+
+.ant-menu-item-selected .menu-abr,
+.ant-menu-submenu-selected .menu-abr {
+  color: #ffd166 !important;
+  text-shadow: 0 2px 8px #00c6ff44;
+}
+
+.ant-menu-item .menu-abr,
+.ant-menu-submenu-title .menu-abr {
+  transition: color 0.2s, text-shadow 0.2s;
+}
+
+.ant-menu-item:hover .anticon,
+.ant-menu-submenu-title:hover .anticon {
+  color: #3282b8 !important;
+  transform: scale(1.08) rotate(-4deg);
+}
+
+.ant-menu-item:hover .menu-abr,
+.ant-menu-submenu-title:hover .menu-abr {
+  color: #3282b8 !important;
+  text-shadow: 0 2px 8px #00b89433;
+}
+
+/* Content & Footer */
+.app-content {
+  margin: 4px 8px;
+  background: #fff;
+  padding: 12px;
+  border-radius: 6px;
+  min-height: 120px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-content > * {
+  flex: 1 1 auto;
+}
+
+.app-footer {
+  text-align: center;
+  padding: 10px;
+  background-color: #1b1f24;
+  color: #ccc;
+  font-size: 0.9rem;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 768px) {
+  .header-title .main-title {
+    font-size: 1.8rem;
+  }
+  .time-display {
+    font-size: 1rem;
+  }
+}

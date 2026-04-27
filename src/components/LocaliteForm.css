@@ -1,0 +1,39 @@
+.localite-form-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  background-color: #f0f2f5;
+  min-height: 100vh;
+}
+
+.localite-form-card {
+  width: 100%;
+  max-width: 600px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+}
+
+.localite-form-card .ant-card-head-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-align: center;
+  background-color: #1890ff;
+  color: #fff;
+  padding: 16px;
+  border-radius: 8px 8px 0 0;
+}
+
+.ant-form-item-label > label {
+  font-weight: 500;
+}
+
+.ant-btn-primary {
+  background-color: #1890ff;
+  border-color: #1890ff;
+  font-weight: 500;
+}
+
+.ant-select:not(.ant-select-customize-input) .ant-select-selector {
+  border-radius: 4px !important;
+}

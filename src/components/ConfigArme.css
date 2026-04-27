@@ -1,0 +1,257 @@
+:root {
+  --config-primary: #0c6ff9;
+  --config-secondary: #36cfc9;
+  --config-accent: #ff7a45;
+  --config-bg: #f7fafc;
+  --config-card: #ffffff;
+  --config-border: #d6e4ff;
+  --config-text: #27415a;
+}
+
+.config-arme-page {
+  min-height: 100%;
+  padding: 24px;
+  background: var(--config-bg);
+  color: var(--config-text);
+}
+
+.config-arme-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.config-arme-header__title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--config-primary);
+}
+
+.config-arme-header__subtitle {
+  margin-top: 4px;
+  color: rgba(39, 65, 90, 0.7);
+}
+
+.config-arme-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.config-arme-card {
+  background: var(--config-card);
+  border: 1px solid var(--config-border);
+  border-radius: 12px;
+  box-shadow: 0 12px 24px rgba(12, 111, 249, 0.08);
+}
+
+.config-arme-card + .config-arme-card {
+  margin-top: 24px;
+}
+
+.config-arme-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.config-arme-form .ant-form-item {
+  margin-bottom: 12px;
+}
+
+.config-arme-form .ant-select-selector,
+.config-arme-form .ant-input {
+  border-radius: 8px;
+  border-color: var(--config-border);
+}
+
+.config-arme-table .ant-table {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.config-arme-table .ant-table-thead > tr > th {
+  background: rgba(12, 111, 249, 0.08);
+  color: var(--config-primary);
+  font-weight: 600;
+}
+
+.config-arme-table .ant-table-tbody > tr:hover > td {
+  background: rgba(54, 207, 201, 0.08);
+}
+
+.config-arme-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.config-arme-badge {
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  background: rgba(12, 111, 249, 0.12);
+  color: var(--config-primary);
+}
+
+.config-arme-empty {
+  text-align: center;
+  padding: 48px 16px;
+  color: rgba(39, 65, 90, 0.5);
+}
+
+.config-arme-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.config-arme-stat-card {
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(12, 111, 249, 0.12), rgba(12, 111, 249, 0));
+  padding: 16px;
+  border: 1px solid rgba(12, 111, 249, 0.18);
+}
+
+.config-arme-stat-card__label {
+  display: block;
+  font-size: 13px;
+  text-transform: uppercase;
+  color: rgba(39, 65, 90, 0.65);
+}
+
+.config-arme-stat-card__value {
+  display: block;
+  margin-top: 4px;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--config-primary);
+}
+
+.config-arme-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 16px;
+  background: rgba(54, 207, 201, 0.08);
+  border-radius: 12px;
+  border: 1px solid rgba(54, 207, 201, 0.18);
+}
+
+.config-arme-filter-bar .ant-select-selector,
+.config-arme-filter-bar .ant-input {
+  border-radius: 8px;
+  border-color: rgba(12, 111, 249, 0.25);
+}
+
+.config-arme-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 48px 16px;
+  border-radius: 12px;
+  border: 1px dashed rgba(12, 111, 249, 0.25);
+  background: rgba(12, 111, 249, 0.04);
+}
+
+.config-arme-empty-state__icon {
+  font-size: 40px;
+  color: var(--config-primary);
+  margin-bottom: 12px;
+}
+
+.config-arme-empty-state__text {
+  margin-bottom: 16px;
+  color: rgba(39, 65, 90, 0.7);
+}
+
+.config-arme-empty-state__btn {
+  border-radius: 8px;
+  background: var(--config-primary);
+  border-color: var(--config-primary);
+}
+
+.config-arme-empty-state__btn:hover {
+  background: var(--config-secondary);
+  border-color: var(--config-secondary);
+}
+
+/* Conteneur principal */
+.config-arme-list-container {
+  padding: 20px;
+  background: #f6fff8;
+  border-radius: 18px;
+  max-width: 900px;
+  margin: 0 auto;
+  box-shadow: 0 8px 24px -12px rgba(41, 61, 46, 0.10);
+}
+
+/* Bouton d'ajout */
+.config-arme-list-container .ant-btn-primary {
+  background: #1f4a78;
+  border-color: #1f4a78;
+  font-weight: 600;
+  border-radius: 8px;
+}
+.config-arme-list-container .ant-btn-primary:hover {
+  background: #0077cc;
+  border-color: #0077cc;
+}
+
+/* Table */
+.config-arme-list-container .ant-table {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+
+.config-arme-list-container .ant-table-thead > tr > th {
+  background: #e3f1e6 !important;
+  color: #1f4a78 !important;
+  font-weight: 700;
+  text-align: center;
+}
+
+.config-arme-list-container .ant-table-tbody > tr > td {
+  text-align: center;
+  font-size: 15px;
+  padding: 8px 10px;
+}
+
+/* Actions */
+.config-arme-list-container .ant-btn-link {
+  font-weight: 500;
+  color: #1f78f0;
+  padding: 0 6px;
+}
+.config-arme-list-container .ant-btn-link[danger] {
+  color: #e74c3c;
+}
+
+/* Loader centré et non bloquant */
+.config-arme-list-container .ant-spin-nested-loading {
+  min-height: 180px;
+}
+.config-arme-list-container .ant-spin {
+  max-height: 80px;
+}
+
+@media (max-width: 768px) {
+  .config-arme-header__title {
+    font-size: 20px;
+  }
+
+  .config-arme-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .config-arme-filter-bar {
+    flex-direction: column;
+  }
+}

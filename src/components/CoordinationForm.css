@@ -1,0 +1,16 @@
+.ant-card {
+  max-width: 600px;
+  margin: 32px auto;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px #0077cc22;
+}
+
+.ant-form-item-label > label {
+  font-weight: 600;
+  color: #0077cc;
+}
+
+.ant-btn-primary {
+  background: linear-gradient(90deg,#0077cc,#00c6ff);
+  border: none;
+}

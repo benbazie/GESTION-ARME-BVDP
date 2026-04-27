@@ -1,0 +1,18 @@
+.coord-provinciale-list-container {
+  background: #f8fafc;
+  min-height: 100vh;
+  padding: 24px;
+}
+.coord-provinciale-list-card {
+  box-shadow: 0 2px 12px #e6f7ff;
+  border-radius: 12px;
+}
+.coord-provinciale-table th, .coord-provinciale-table td {
+  font-size: 15px;
+}
+.coord-provinciale-table tr:nth-child(even) {
+  background: #f6faff;
+}
+.coord-provinciale-table tr:hover {
+  background: #e6f7ff;
+}

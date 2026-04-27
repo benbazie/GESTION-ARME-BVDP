@@ -1,0 +1,35 @@
+/* src/components/StockList.css */
+
+.stock-list-container {
+    margin: 20px;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+    font-family: 'Roboto', sans-serif;
+  }
+  
+  .stock-list-header h1 {
+    margin: 0;
+    font-size: 24px;
+    color: #333;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  .stock-list-search {
+    margin-bottom: 20px;
+    max-width: 300px;
+  }
+  
+  /* Personnalisation similaire pour les boutons si besoin */
+  .ant-btn-primary {
+    background-color: #1890ff;
+    border-color: #1890ff;
+  }
+  
+  .ant-btn-primary:hover {
+    background-color: #40a9ff;
+    border-color: #40a9ff;
+  }
+  

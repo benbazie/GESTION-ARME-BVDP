@@ -1,0 +1,183 @@
+{
+  "name": "gestion-armes-vdp",
+  "version": "1.3.1",
+  "description": "BGA (BVDP-GESTION-AMO) — Electron + React + PostgreSQL",
+  "author": "BAZIE YIDIA Benoit <benabzi@live.fr>",
+  "license": "MIT",
+  "main": "main.js",
+  "build": {
+    "appId": "com.gestionarmes.vdp",
+    "productName": "Gestion Armes VDP",
+    "files": [
+      "dist/**/*",
+      "main.js",
+      "preload.js",
+      "server.js",
+      "database/**/*",
+      "routes/**/*",
+      "utils/**/*",
+      ".env",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "dist",
+        "to": "dist"
+      },
+      {
+        "from": ".env",
+        "to": ".env"
+      }
+    ],
+    "extraFiles": [
+      {
+        "from": ".env",
+        "to": "."
+      }
+    ],
+    "asarUnpack": [
+      "dist/**/*"
+    ],
+    "icon": "icon.ico",
+    "directories": {
+      "buildResources": "assets",
+      "output": "release"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "icon.ico"
+    },
+    "npmRebuild": false
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "migrate": "node-pg-migrate -f node-pg-migrate.config.js up",
+    "migrate:down": "node-pg-migrate -f node-pg-migrate.config.js down",
+    "migrate:new": "node-pg-migrate -f node-pg-migrate.config.js create",
+    "migrate:status": "node-pg-migrate -f node-pg-migrate.config.js up --dry-run",
+    "db:up": "docker compose -f docker-compose.postgres.yml up -d",
+    "db:down": "docker compose -f docker-compose.postgres.yml down",
+    "db:logs": "docker compose -f docker-compose.postgres.yml logs -f",
+    "db:ps": "docker compose -f docker-compose.postgres.yml ps",
+    "pg:smoke": "node scripts/pg-smoke-test.js",
+    "pg:export": "node scripts/pg-export-json.js",
+    "pg:backfill:vdp-coordinations": "node scripts/pg-backfill-vdp-coordinations.js",
+    "pg:backfill:armes-coordinations": "node scripts/pg-backfill-armes-coordinations.js",
+    "pg:backfill:table-coordinations": "node scripts/pg-backfill-table-coordinations.js",
+    "sqlite:export": "node scripts/sqlite-export-to-json.js",
+    "sqlite:tables": "node scripts/sqlite-list-tables.js",
+    "pg:fks": "node scripts/pg-show-fks.js",
+    "start:electron": "concurrently \"npm run server\" \"cross-env STARTED_BY_NPM_SERVER=true npm run electron\"",
+    "electron": "electron .",
+    "server": "node server.js",
+    "test": "echo \"No test runner configured\" && exit 0",
+    "eject": "echo \"Not needed with Vite\" && exit 0",
+    "build-standalone": "node scripts/build-portable-standalone.js",
+    "package-standalone": "npm run build && npm run build-standalone",
+    "build-react": "react-scripts build",
+    "build-electron": "electron-builder",
+    "dist": "npm run build && npm run verify-root && npm run copy-env && npm run copy-utils && npm run build-electron",
+    "copy-env": "node -e \"const fs=require('fs');const path=require('path');const src=path.resolve('.env');const destDir=path.resolve('dist');if(fs.existsSync(src)){if(!fs.existsSync(destDir))fs.mkdirSync(destDir,{recursive:true});fs.copyFileSync(src,path.join(destDir,'.env'));}\"",
+    "copy-utils": "node -e \"const fs=require('fs');const path=require('path');const srcDir=path.resolve('utils');const destDir=path.resolve('dist','utils');if(!fs.existsSync(srcDir)){console.log('Dossier utils absent, copie ignorée');process.exit(0);}const ensureParent=dir=>{const parent=path.dirname(dir);if(!fs.existsSync(parent))fs.mkdirSync(parent,{recursive:true});};ensureParent(destDir);if(fs.cpSync){fs.cpSync(srcDir,destDir,{recursive:true});}else{const copy=(src,dst)=>{const stat=fs.statSync(src);if(stat.isDirectory()){fs.mkdirSync(dst,{recursive:true});for(const entry of fs.readdirSync(src))copy(path.join(src,entry),path.join(dst,entry));}else{fs.copyFileSync(src,dst);}};copy(srcDir,destDir);}console.log('utils copié vers dist/utils');\"",
+    "check-env": "node scripts/check-env.js",
+    "rebuild-native": "npx electron-rebuild --force --parallel",
+    "rebuild-and-build": "npm run rebuild-native && npm run build-electron",
+    "verify-root": "node -e \"const fs=require('fs');const path=require('path');const cwd=process.cwd();const requirements=[{name:'main.js',type:'file'},{name:'preload.js',type:'file'},{name:'server.js',type:'file'},{name:'package.json',type:'file'},{name:'dist',type:'dir'},{name:'database',type:'dir'},{name:'routes',type:'dir'},{name:'utils',type:'dir'}];const missing=requirements.filter(({name,type})=>{const target=path.join(cwd,name);if(!fs.existsSync(target))return true;const stat=fs.statSync(target);return type==='dir'? !stat.isDirectory(): !stat.isFile();});if(missing.length){console.error('Ressources manquantes :', missing.map(p=>p.name).join(', '));process.exit(1);}console.log('Racine valide :', requirements.map(r=>r.name).join(', '));\"",
+    "inspect:print": "node ./scripts/print-release-inspection.js"
+  },
+  "makers": [
+    {
+      "name": "@electron-forge/maker-squirrel",
+      "config": {
+        "name": "gestion_armes_vdp"
+      }
+    },
+    {
+      "name": "@electron-forge/maker-zip",
+      "platforms": [
+        "win32"
+      ]
+    },
+    {
+      "name": "@electron-forge/maker-deb",
+      "config": {}
+    },
+    {
+      "name": "@electron-forge/maker-rpm",
+      "config": {}
+    }
+  ],
+  "dependencies": {
+    "@ant-design/icons": "^6.0.2",
+    "@vitejs/plugin-react": "^4.2.1",
+    "antd": "^5.27.4",
+    "axios": "^1.12.2",
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
+    "docx": "^9.5.1",
+    "dotenv": "^17.2.2",
+    "echarts": "^5.6.0",
+    "echarts-for-react": "^3.0.2",
+    "express": "^5.1.0",
+    "file-saver": "^2.0.5",
+    "helmet": "^8.1.0",
+    "howler": "^2.2.4",
+    "jsonwebtoken": "^9.0.2",
+    "jspdf": "^3.0.3",
+    "jspdf-autotable": "^5.0.2",
+    "leaflet": "^1.9.4",
+    "moment": "^2.30.1",
+    "node-fetch": "^2.7.0",
+    "pg": "^8.16.3",
+    "qrcode": "^1.5.4",
+    "qrcode.react": "^4.2.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-icons": "^5.5.0",
+    "react-leaflet": "^4.2.1",
+    "react-lottie": "^1.2.10",
+    "react-pivottable": "^0.11.0",
+    "react-resizable": "^3.0.5",
+    "react-router-dom": "^6.26.0",
+    "react-to-print": "^3.2.0",
+    "recharts": "^3.2.1",
+    "sql.js": "^1.13.0",
+    "vite": "^7.3.1",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.28.4",
+    "@babel/preset-env": "^7.28.3",
+    "@babel/preset-react": "^7.27.1",
+    "@electron-forge/cli": "^6.0.0",
+    "babel-loader": "^10.0.0",
+    "concurrently": "^7.6.0",
+    "cross-env": "^7.0.3",
+    "css-loader": "^7.1.2",
+    "electron": "^39.2.6",
+    "electron-builder": "^24.13.3",
+    "global": "^4.4.0",
+    "html-webpack-plugin": "^5.6.4",
+    "node-pg-migrate": "^7.6.1",
+    "nodemon": "^3.1.10",
+    "rimraf": "^6.0.1",
+    "style-loader": "^4.0.0",
+    "wait-on": "^7.2.0",
+    "webpack": "^5.101.3",
+    "webpack-cli": "^6.0.1"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

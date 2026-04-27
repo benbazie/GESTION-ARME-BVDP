@@ -1,0 +1,183 @@
+/* Palette principale */
+:root {
+  --primary: #0c6ff9;
+  --secondary: #36cfc9;
+  --accent: #ff7a45;
+  --background: #f6f8fa;
+  --card-bg: #fff;
+  --text-main: #27415a;
+  --text-light: #6c8ba4;
+  --border: #e3f1e6;
+  --table-header: #e3f1e6;
+  --table-row-hover: #f0f7ff;
+  --success: #52c41a;
+  --warning: #faad14;
+  --danger: #ff4d4f;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px);}
+  to   { opacity: 1; transform: none;}
+}
+@keyframes pulse {
+  0%   { box-shadow: 0 0 0 0 var(--primary);}
+  70%  { box-shadow: 0 0 0 10px transparent;}
+  100% { box-shadow: 0 0 0 0 transparent;}
+}
+
+/* Cards */
+.card, .ant-card {
+  background: var(--card-bg);
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(44, 62, 80, 0.07);
+  animation: fadeIn 0.5s;
+  border: 1px solid var(--border);
+}
+
+/* Boutons */
+.ant-btn, button {
+  border-radius: 6px !important;
+  font-weight: 500;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.ant-btn-primary, .ant-btn[type="primary"] {
+  background: var(--primary) !important;
+  border-color: var(--primary) !important;
+  color: #fff !important;
+  box-shadow: 0 2px 8px rgba(12,111,249,0.08);
+}
+.ant-btn-primary:hover, .ant-btn[type="primary"]:hover {
+  background: var(--secondary) !important;
+  border-color: var(--secondary) !important;
+}
+.ant-btn-danger, .ant-btn[danger] {
+  background: var(--danger) !important;
+  border-color: var(--danger) !important;
+  color: #fff !important;
+}
+.ant-btn:hover, button:hover {
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
+/* Tableaux */
+.ant-table {
+  background: var(--card-bg);
+  border-radius: 8px;
+  font-size: 15px;
+  color: var(--text-main);
+}
+.ant-table-thead > tr > th {
+  background: var(--table-header) !important;
+  color: var(--primary) !important;
+  font-weight: 600;
+  border-bottom: 2px solid var(--border);
+}
+.ant-table-tbody > tr:hover > td {
+  background: var(--table-row-hover) !important;
+  transition: background 0.2s;
+}
+.ant-table-tbody > tr > td {
+  border-bottom: 1px solid var(--border);
+}
+.ant-table-pagination {
+  margin-top: 12px;
+}
+
+/* Animations sur les cards et tableaux */
+.ant-card, .ant-table {
+  animation: fadeIn 0.5s;
+}
+
+/* Titres */
+.ant-typography, h1, h2, h3, h4, h5 {
+  color: var(--primary);
+  font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+  font-weight: 700;
+}
+
+/* Textes secondaires */
+.ant-typography-secondary, .subtitle, .ant-card-meta-description {
+  color: var(--text-light);
+}
+
+/* Tags */
+.ant-tag {
+  border-radius: 4px;
+  font-size: 13px;
+  padding: 2px 10px;
+  font-weight: 500;
+}
+
+/* Inputs, selects */
+.ant-input, .ant-select-selector, .ant-picker {
+  border-radius: 6px !important;
+  border-color: var(--border) !important;
+  background: #f9fbfc !important;
+  font-size: 15px;
+}
+
+/* Progress */
+.ant-progress-bg {
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+}
+
+/* Modals */
+.ant-modal-content {
+  border-radius: 12px;
+  background: var(--card-bg);
+  animation: fadeIn 0.4s;
+}
+
+/* Animations sur les boutons principaux */
+.ant-btn-primary {
+  animation: pulse 2s infinite;
+}
+
+/* Footer */
+.app-footer {
+  background: var(--background);
+  color: var(--text-light);
+  font-size: 14px;
+  text-align: center;
+  padding: 18px 0;
+  border-top: 1px solid var(--border);
+}
+
+/* Layout */
+.app-layout, .ant-layout {
+  background: var(--background);
+}
+
+/* Sider */
+.ant-layout-sider {
+  background: var(--primary) !important;
+}
+.logo {
+  color: #fff;
+  font-size: 22px;
+  font-weight: 700;
+  padding: 18px 0 12px 0;
+  text-align: center;
+  letter-spacing: 2px;
+}
+
+/* Header */
+.app-header {
+  background: var(--card-bg);
+  border-bottom: 1px solid var(--border);
+  color: var(--primary);
+  font-size: 18px;
+  font-weight: 600;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Animations sur les tableaux et cards */
+.dashboard-card, .ant-card, .ant-table {
+  animation: fadeIn 0.5s;
+}
+
+/* Ajoutez d'autres styles pour harmoniser les composants spécifiques... */

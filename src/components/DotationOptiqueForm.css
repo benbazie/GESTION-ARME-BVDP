@@ -1,0 +1,49 @@
+/* src/components/DotationOptiqueForm.css */
+.dotation-optique-form {
+    padding: 40px;
+    display: flex;
+    justify-content: center;
+    background: linear-gradient(135deg, #f0f5ff, #e6f7ff);
+    min-height: 100vh;
+  }
+  
+  .form-card {
+    width: 500px;
+    background-color: #ffffff;
+    border: 1px solid #d9d9d9;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    padding: 20px;
+  }
+  
+  .ant-form-item-label > label {
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .ant-input,
+  .ant-select-selector,
+  .ant-picker {
+    border-radius: 4px;
+    height: 40px;
+    font-size: 14px;
+  }
+  
+  .ant-btn-primary {
+    background-color: #1976d2;
+    border-color: #1976d2;
+  }
+  
+  .ant-btn-primary:hover,
+  .ant-btn-primary:focus {
+    background-color: #2196f3;
+    border-color: #2196f3;
+  }
+  
+  @media (max-width: 600px) {
+    .form-card {
+      width: 100%;
+      padding: 10px;
+    }
+  }
+  

@@ -1,0 +1,29 @@
+.coordination-list-container {
+  background: #f7faff;
+  min-height: 100vh;
+  padding: 24px;
+}
+
+.ant-card {
+  border-radius: 10px;
+  box-shadow: 0 2px 8px #0077cc22;
+}
+
+.ant-table {
+  background: #fff;
+  border-radius: 8px;
+}
+
+.ant-btn-primary {
+  background: linear-gradient(90deg,#0077cc,#00c6ff);
+  border: none;
+}
+
+@media (max-width: 600px) {
+  .coordination-list-container {
+    padding: 4px;
+  }
+  .ant-card {
+    margin: 0 !important;
+  }
+}

@@ -1,0 +1,144 @@
+/* EntiteForm.css */
+
+.entite-form-container {
+  position: relative;
+  padding: 40px 20px;
+  max-width: 600px;
+  margin: 40px auto;
+  background: #ffffff; /* Fond clair pour une meilleure lisibilité */
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+}
+
+.form-wrapper {
+  padding: 20px;
+}
+
+.form-title {
+  color: #333; /* Texte sombre pour le contraste */
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.futuristic-form .ant-form-item-label > label {
+  color: #444;
+  font-weight: 600;
+}
+
+.futuristic-form .ant-input,
+.futuristic-form .ant-select-selector,
+.futuristic-form .ant-input-textarea {
+  background: #f7f7f7;
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.futuristic-form .ant-input::placeholder,
+.futuristic-form .ant-select-selection-placeholder {
+  color: #888;
+}
+
+.form-actions {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.animated-button {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.animated-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+}
+
+/* Animation fadeInDown */
+.animated.fadeInDown {
+  animation: fadeInDown 0.8s ease-out;
+}
+@keyframes fadeInDown {
+  from {
+    opacity: 0; transform: translateY(-30px);
+  }
+  to {
+    opacity: 1; transform: translateY(0);
+  }
+}
+
+/* Adaptation responsive */
+@media (max-width: 480px) {
+  .entite-form-container {
+    margin: 20px;
+    padding: 20px;
+  }
+  .form-title {
+    font-size: 1.5rem;
+  }
+}
+
+.entite-form .form-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.entite-form .form-panel {
+  max-width: 900px;
+  margin: 32px auto;
+  padding: 28px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 18px 40px rgba(20, 80, 160, 0.16);
+}
+
+.entite-form .form-section {
+  background: #f7faff;
+  border: 1px solid #dbe7ff;
+  border-radius: 16px;
+  padding: 18px 20px;
+  margin-bottom: 20px;
+}
+
+.entite-form .section-title {
+  margin: 0 0 14px;
+  font-size: 15px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #3566a3;
+}
+
+.entite-form .ant-input,
+.entite-form .ant-select-selector,
+.entite-form .ant-input-textarea {
+  background: #ffffff;
+  border-color: #c9d8ef;
+  border-radius: 10px;
+  color: #1f2a44;
+}
+
+.entite-form .ant-switch {
+  background: #bdd6ff;
+}
+
+.entite-form .ant-switch-checked {
+  background: #0c6ff9;
+}
+
+@media (max-width: 768px) {
+  .entite-form .form-panel {
+    padding: 20px;
+    margin: 24px 12px;
+  }
+  .entite-form .form-section {
+    padding: 16px 16px 6px;
+  }
+}
+
+.map-modal {
+	height: 580px;
+	width: 100%;
+	border-radius: 8px;
+}
