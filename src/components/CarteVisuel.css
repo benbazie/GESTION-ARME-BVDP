@@ -1,0 +1,19 @@
+/* src/components/CarteVisuel.css */
+
+.carte-visuel-container {
+    margin: 20px;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+    font-family: "Roboto", sans-serif;
+  }
+  
+  .carte-visuel-container h1 {
+    text-align: center;
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+    font-weight: bold;
+  }
+  

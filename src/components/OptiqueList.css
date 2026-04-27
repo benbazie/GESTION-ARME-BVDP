@@ -1,0 +1,69 @@
+/* src/components/OptiqueList.css */
+
+@import "./MunitionList.css";
+
+.optique-list-page {
+  min-height: 100vh;
+  padding: 52px 18px 96px;
+  background: linear-gradient(180deg, #f1f6ff 0%, #e7f1ff 100%);
+  font-family: "Roboto", sans-serif;
+}
+
+.optique-list-shell {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 34px 38px;
+  border-radius: 28px;
+  background: #ffffff;
+  border: 1px solid rgba(64, 130, 210, 0.2);
+  box-shadow: 0 44px 80px -48px rgba(28, 72, 128, 0.4);
+}
+
+.optique-list-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 26px;
+  color: #1f4372;
+}
+
+.optique-list-filters,
+.optique-list-table-card,
+.optique-list-preview-card {
+  border-radius: 22px;
+  background: rgba(243, 248, 255, 0.96);
+  border: 1px solid rgba(92, 150, 220, 0.25);
+  box-shadow: 0 28px 48px -36px rgba(49, 102, 168, 0.3);
+}
+
+/* Style du tableau (similaire à ArmeList) */
+.optique-list-table-card .ant-table {
+    border: 2px solid #000;
+  }
+  
+.optique-list-table-card .ant-table-thead > tr > th {
+  background: linear-gradient(135deg, #f0f7ff, #e3f1ff);
+  color: #214d80;
+  border-bottom: 1px solid rgba(90, 150, 210, 0.24);
+}
+
+.optique-columns-modal__item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-radius: 16px;
+  background: rgba(232, 242, 255, 0.9);
+  border: 1px solid transparent;
+}
+
+.optique-columns-modal__item.is-active {
+  border-color: rgba(70, 130, 210, 0.35);
+  box-shadow: 0 18px 34px -24px rgba(45, 100, 170, 0.35);
+}
+
+.optique-list-table-card .ant-table td {
+  text-align: center;
+  padding: 8px;
+}

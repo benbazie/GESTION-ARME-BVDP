@@ -1,0 +1,37 @@
+/* ConfigArmeList.css */
+
+.config-arme-list-container {
+    padding: 20px;
+    margin: 0 auto;
+    max-width: 1200px;
+    background-color: #fff;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+  
+  .config-arme-list-header {
+    text-align: center;
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 20px;
+  }
+  
+  .config-arme-list-refresh-btn {
+    margin-bottom: 15px;
+  }
+  
+  .ant-table {
+    margin-top: 20px;
+  }
+  
+  /* Ajustements pour la barre de progression si nécessaire */
+  .ant-progress {
+    margin-bottom: 20px;
+  }
+  
+  /* Exemple d'espacement pour le conteneur global */
+  body {
+    background-color: #f0f2f5;
+    font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  

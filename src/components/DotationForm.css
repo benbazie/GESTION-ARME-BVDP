@@ -1,0 +1,80 @@
+/* DotationForm.css */
+
+/* Importation de la police Roboto pour un rendu moderne */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+.dotation-form-container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 30px;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  font-family: 'Roboto', sans-serif;
+}
+
+/* Titre du formulaire */
+.dotation-form-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 26px;
+  color: #2C3E50;
+}
+
+/* Texte d'information du formulaire */
+.dotation-form-info {
+  display: block;
+  text-align: center;
+  font-size: 14px;
+  color: #7d7d7d;
+  margin-bottom: 20px;
+}
+
+/* Styles du formulaire */
+.dotation-form {
+  margin-top: 20px;
+}
+
+.dotation-form .ant-form-item {
+  margin-bottom: 20px;
+}
+
+.dotation-form .ant-form-item-label > label {
+  font-weight: 700;
+  color: #2C3E50;
+}
+
+.dotation-form .ant-input,
+.dotation-form .ant-select-selector,
+.dotation-form .ant-picker {
+  border-radius: 4px;
+}
+
+/* Bouton de soumission principal */
+.dotation-form .ant-btn-primary {
+  width: 100%;
+  background: linear-gradient(90deg, #d62828, #1a936f);
+  border: none;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 5px;
+  transition: opacity 0.3s ease;
+}
+
+.dotation-form .ant-btn-primary:hover {
+  opacity: 0.9;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .dotation-form-container {
+    margin: 20px;
+    padding: 20px;
+  }
+  .dotation-form-container h2 {
+    font-size: 22px;
+  }
+  .dotation-form .ant-form-item {
+    margin-bottom: 16px;
+  }
+}

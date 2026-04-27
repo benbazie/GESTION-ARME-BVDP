@@ -1,0 +1,116 @@
+import React, { useState, useEffect } from "react";
+import { Table, Button, Space, Spin, message } from "antd";
+import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
+
+const ConfigMunitionList = () => {
+  const [loading, setLoading] = useState(false);
+  const [munitions, setMunitions] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    loadMunitions();
+  }, []);
+
+  const loadMunitions = async () => {
+    setLoading(true);
+    try {
+      const data = await window.electronAPI.getConfigMunition();
+      setMunitions(Array.isArray(data) ? data : []);
+    } catch (error) {
+      console.error("Erreur complète:", error);
+      message.error("Erreur lors du chargement des configurations de munitions");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await window.electronAPI.deleteConfigMunition(id);
+      message.success("Configuration de munition supprimée");
+      loadMunitions();
+    } catch (error) {
+      console.error("Erreur lors de la suppression :", error);
+      message.error("Erreur lors de la suppression de la configuration de munition");
+    }
+  };
+
+  // Ajout d'une colonne pour seuil critique
+  const columns = [
+    {
+      title: "Type",
+      dataIndex: "type",
+      key: "type",
+    },
+    {
+      title: "Calibre",
+      dataIndex: "calibre",
+      key: "calibre",
+    },
+    {
+      title: "Désignation",
+      dataIndex: "designation",
+      key: "designation",
+    },
+    {
+      title: "Observation",
+      dataIndex: "observation",
+      key: "observation",
+    },
+    {
+      title: "Seuil Critique",
+      dataIndex: "seuil_critique",
+      key: "seuil_critique",
+    },
+    {
+      title: "Actions",
+      key: "actions",
+      render: (_, record) => (
+        <Space size="small">
+          <Button
+            type="link"
+            icon={<EditOutlined />}
+            onClick={() => navigate(`/config-munition/form/${record.id}`)}
+          >
+            Modifier
+          </Button>
+          <Button
+            type="link"
+            danger
+            icon={<DeleteOutlined />}
+            onClick={() => handleDelete(record.id)}
+          >
+            Supprimer
+          </Button>
+        </Space>
+      ),
+    },
+  ];
+
+  return (
+    <div style={{ padding: "20px" }}>
+      <div style={{ marginBottom: 16 }}>
+        <Button
+          type="primary"
+          icon={<PlusOutlined />}
+          onClick={() => navigate("/config-munition/form")}
+        >
+          Ajouter Configuration de Munition
+        </Button>
+      </div>
+      <Spin spinning={loading}>
+        <Table
+          bordered
+          dataSource={munitions}
+          columns={columns}
+          rowKey="id"
+          pagination={{ pageSize: 10 }}
+        />
+      </Spin>
+    </div>
+  );
+};
+
+export default ConfigMunitionList;
+  

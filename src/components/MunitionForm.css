@@ -1,0 +1,235 @@
+/* MunitionForm.css */
+
+/* Conteneur global du formulaire */
+.munition-form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background-color: #f6f8fa;
+    min-height: 100vh;
+  }
+  
+  /* Style de la carte qui contient le formulaire */
+  .munition-form-card {
+    width: 100%;
+    max-width: 600px;
+    background: #fff;
+    border: 1px solid #e8e8e8;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 24px;
+    margin-top: 40px;
+  }
+  
+  /* Style des labels du formulaire */
+  .munition-form-card .ant-form-item-label > label {
+    font-weight: 600;
+    color: #333;
+  }
+  
+  /* Boutons */
+  .ant-btn-primary {
+    background-color: #1890ff;
+    border-color: #1890ff;
+  }
+  
+  .ant-btn-link {
+    color: #1890ff;
+  }
+  
+  /* Si vous souhaitez ajouter un peu de marge aux éléments du formulaire */
+  .ant-form-item {
+    margin-bottom: 16px;
+  }
+
+  .munition-form-page {
+    min-height: 100vh;
+    padding: 48px 16px 80px;
+    background: linear-gradient(180deg, #f8fbff 0%, #e9f3ff 100%);
+  }
+
+  .munition-form-overlay {
+    position: absolute;
+    inset: -35%;
+    background:
+      radial-gradient(30% 42% at 20% 22%, rgba(135, 192, 224, 0.28), transparent),
+      radial-gradient(26% 38% at 80% 24%, rgba(255, 209, 153, 0.25), transparent),
+      radial-gradient(34% 46% at 54% 78%, rgba(172, 216, 204, 0.22), transparent);
+    pointer-events: none;
+    animation: munitionFormGlow 18s ease-in-out infinite alternate;
+  }
+
+  .munition-form-shell {
+    position: relative;
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 34px 38px 46px;
+    background: #ffffff;
+    border: 1px solid rgba(120, 170, 220, 0.25);
+    box-shadow: 0 36px 70px -44px rgba(44, 92, 160, 0.4);
+    color: #27415a;
+    overflow: hidden;
+  }
+
+  .munition-form-shell::before {
+    content: "";
+    position: absolute;
+    inset: -180px;
+    background:
+      radial-gradient(220px 220px at 18% 30%, rgba(101, 199, 255, 0.24), transparent),
+      radial-gradient(260px 260px at 86% 26%, rgba(255, 196, 140, 0.22), transparent),
+      radial-gradient(280px 280px at 52% 90%, rgba(135, 220, 174, 0.18), transparent);
+    animation: floatAura 22s ease-in-out infinite alternate;
+    pointer-events: none;
+  }
+
+  .munition-form-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 18px;
+    align-items: flex-start;
+    margin-bottom: 26px;
+  }
+
+  .munition-form-header .ant-btn-link {
+    color: #1f6bdd;
+    padding-left: 0;
+  }
+
+  .munition-form-title {
+    margin: 0;
+    color: #1f4f80 !important;
+    letter-spacing: 0.4px;
+  }
+
+  .munition-form-subtitle {
+    display: block;
+    margin-top: 6px;
+    color: #4a6f94;
+  }
+
+  .munition-form-progress-card,
+  .munition-form-card {
+    border-radius: 22px;
+    background: rgba(248, 252, 255, 0.96);
+    border: 1px solid rgba(110, 170, 220, 0.25);
+    box-shadow: 0 26px 48px -38px rgba(72, 120, 178, 0.32);
+  }
+
+  .munition-form-progress-card {
+    padding: 18px 22px;
+    margin-bottom: 20px;
+    color: #294e77;
+  }
+
+  .munition-form-progress-text {
+    display: block;
+    margin-top: 6px;
+    color: #5b7aa3;
+  }
+
+  .munition-form-card {
+    padding: 26px 30px;
+  }
+
+  .munition-form .ant-form-item-label > label {
+    color: #325879;
+    font-weight: 600;
+  }
+
+  .munition-form .ant-input,
+  .munition-form .ant-input-number,
+  .munition-form .ant-select-selector,
+  .munition-form .ant-picker {
+    background: #ffffff !important;
+    border: 1px solid rgba(118, 168, 228, 0.32) !important;
+    color: #1f3650;
+  }
+
+  .munition-form .ant-input:focus,
+  .munition-form .ant-select-focused .ant-select-selector,
+  .munition-form .ant-picker-focused,
+  .munition-form .ant-input-number-focused {
+    border-color: rgba(47, 119, 207, 0.65) !important;
+    box-shadow: 0 0 0 3px rgba(84, 164, 255, 0.28);
+  }
+
+  .munition-form-highlight {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    margin-bottom: 22px;
+    padding: 18px 20px;
+    border-radius: 18px;
+    background: rgba(232, 248, 255, 0.9);
+    border: 1px dashed rgba(84, 170, 255, 0.4);
+  }
+
+  .munition-form-highlight__icon {
+    font-size: 28px;
+    color: #1f6bdd;
+    animation: pulseLight 2.8s ease-in-out infinite;
+  }
+
+  .config-option {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    padding: 6px 0;
+  }
+
+  .config-option small {
+    display: block;
+    color: #6c8bac;
+  }
+
+  .munition-form-icon {
+    color: #1f6bdd;
+    margin-right: 6px;
+  }
+
+  .munition-form-actions {
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px solid rgba(94, 160, 226, 0.26);
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .munition-form-actions .ant-btn-primary {
+    min-width: 220px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #52a7ff, #1f78f0);
+    color: #ffffff;
+    border: none;
+    font-weight: 600;
+    box-shadow: 0 26px 46px -24px rgba(40, 114, 193, 0.45);
+  }
+
+  @keyframes munitionFormGlow {
+    0% { transform: translate3d(-2%, 0, 0) scale(1); }
+    100% { transform: translate3d(4%, -3%, 0) scale(1.05); }
+  }
+
+  @keyframes floatAura {
+    0% { transform: translate3d(-2%, 0, 0) scale(1); }
+    100% { transform: translate3d(4%, -3%, 0) scale(1.06); }
+  }
+
+  @keyframes pulseLight {
+    0%, 100% { opacity: 0.65; transform: scale(0.96); }
+    50% { opacity: 1; transform: scale(1.05); }
+  }
+
+  @media (max-width: 900px) {
+    .munition-form-shell { padding: 26px 22px 36px; }
+    .munition-form-card { padding: 24px; }
+    .munition-form-header { flex-direction: column; align-items: flex-start; }
+  }
+
+  @media (max-width: 640px) {
+    .munition-form-page { padding: 34px 16px 64px; }
+    .munition-form-shell { padding: 24px 18px 30px; }
+    .munition-form-actions { justify-content: center; }
+  }

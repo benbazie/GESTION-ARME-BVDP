@@ -1,0 +1,30 @@
+.affichearme-card {
+    max-width: 600px;
+    margin: 40px auto;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    border: 1px solid #e8e8e8;
+  }
+  
+  .affichearme-card .ant-descriptions-header {
+    background-color: #1890ff;
+    color: #fff;
+    padding: 12px;
+    text-align: center;
+  }
+  
+  .affichearme-card .ant-descriptions-item-label {
+    background-color: #f0f2f5;
+    font-weight: bold;
+    padding: 6px 12px;
+    border-right: 1px solid #d9d9d9;
+  }
+  
+  .affichearme-card .ant-descriptions-item-content {
+    padding: 6px 12px;
+  }
+  
+  .affichearme-loading {
+    text-align: center;
+    margin-top: 100px;
+  }
+  

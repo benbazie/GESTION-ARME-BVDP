@@ -1,0 +1,3 @@
+id,code,dotation_type,beneficiary_type,vdp_id,entite_id,sous_entite_id,coordination_id,lot_id,source_id,statut,date_dotation,date_prevue_retour,date_cloture,observation,created_by,updated_by,deleted_by,created_at,updated_at,deleted_at,synced,uuid
+1,DOT-1762083481604,individuelle,vdp,,,,,,,en_cours,2025-11-02,,,,1,1,,2025-11-02 11:38:01,2025-11-02 11:38:01,,0,
+2,,individuelle,vdp,,,,,,,en_cours,,,,,,,,2025-11-02 11:50:41,2025-11-02 11:50:41,,0,

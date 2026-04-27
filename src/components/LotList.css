@@ -1,0 +1,173 @@
+/* src/components/LotList.css */
+
+.lot-list-page {
+  min-height: 100vh;
+  padding: 52px 18px 96px;
+  background: linear-gradient(180deg, #f2f9ff 0%, #eaf5ff 100%);
+  font-family: "Roboto", sans-serif;
+}
+
+.lot-list-shell {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 34px 38px;
+  border-radius: 28px;
+  background: #ffffff;
+  border: 1px solid rgba(76, 151, 220, 0.18);
+  box-shadow: 0 44px 80px -48px rgba(31, 78, 135, 0.34);
+  position: relative;
+  overflow: hidden;
+  color: #244365;
+}
+
+.lot-list-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-start;
+  margin-bottom: 26px;
+}
+
+.lot-list-title {
+  color: #1d4f82 !important;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px !important;
+}
+
+.lot-list-subtitle {
+  color: #4f7092;
+}
+
+/* Zone de recherche */
+.lot-list-search {
+  margin-bottom: 20px;
+}
+
+/* Tableau – ajout de bordures noires et centrage du contenu */
+.lot-list-table .ant-table {
+  border: 2px solid #000;
+}
+
+.ant-table-thead > tr > th {
+  background-color: #00509e;
+  color: #fff;
+  font-weight: bold;
+  text-align: center;
+  border: 1px solid #000;
+  padding: 10px;
+}
+
+.ant-table-tbody > tr > td {
+  border: 1px solid #000;
+  text-align: center;
+  padding: 8px;
+}
+
+/* Personnalisation facultative de la scrollbar horizontale */
+::-webkit-scrollbar {
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+::-webkit-scrollbar-thumb {
+  background: #00509e;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #083d77;
+}
+
+.lot-list-actions .ant-btn,
+.lot-list-reset .ant-btn {
+  border-radius: 16px;
+  border: 1px solid rgba(88, 152, 224, 0.28);
+  background: rgba(222, 240, 255, 0.85);
+  color: #1f4a78;
+}
+
+.lot-list-actions .ant-btn:first-child {
+  background: linear-gradient(135deg, #48afff, #1f78f0);
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 28px 46px -30px rgba(33, 96, 171, 0.5);
+}
+
+.lot-list-search-card,
+.lot-list-table-card,
+.lot-recap-card {
+  border-radius: 22px;
+  background: rgba(244, 250, 255, 0.98);
+  border: 1px solid rgba(92, 162, 226, 0.18);
+  box-shadow: 0 28px 48px -36px rgba(49, 110, 173, 0.28);
+}
+
+.lot-list-search-card {
+  margin-bottom: 18px;
+  padding: 16px 20px;
+}
+
+.lot-list-search-input {
+  border-radius: 14px !important;
+  background: rgba(30, 48, 36, 0.95) !important;
+  border: 1px solid rgba(134, 168, 146, 0.36) !important;
+  color: #f5faf6;
+}
+
+.lot-list-search-input:focus,
+.lot-list-search-input:hover {
+  border-color: rgba(164, 204, 174, 0.6) !important;
+  box-shadow: 0 0 0 3px rgba(120, 170, 136, 0.25);
+}
+
+.lot-list-table-card {
+  border-radius: 22px;
+  background: rgba(45, 57, 74, 0.92);
+  border: 1px solid rgba(114, 142, 174, 0.45);
+  color: #dee6f3;
+  box-shadow: 0 24px 44px -28px rgba(5, 9, 16, 0.75);
+}
+
+.lot-list-table-card .ant-card-body {
+  padding: 0;
+  border-radius: 22px;
+  overflow: hidden;
+}
+
+.lot-list-table-card .ant-table {
+  background: #ffffff;
+}
+
+.lot-list-table-card .ant-table-thead > tr > th {
+  background: linear-gradient(135deg, #f1f8ff, #e4f3ff);
+  color: #255079;
+  border-bottom: 1px solid rgba(100, 162, 224, 0.24);
+  text-align: center;
+}
+
+.lot-list-table-card .ant-table-tbody > tr > td {
+  text-align: center;
+  border-color: rgba(96, 150, 218, 0.16);
+}
+
+/* Cartes de récapitulatif et de résumé des lots */
+.lot-recap-card,
+.lot-summary-card {
+  border-radius: 22px;
+  background: linear-gradient(145deg, rgba(237, 248, 255, 0.96), rgba(226, 242, 255, 0.96));
+  border: 1px solid rgba(112, 176, 235, 0.22);
+  color: #274768;
+  box-shadow: 0 24px 44px -30px rgba(33, 78, 128, 0.24);
+}
+
+@media (max-width: 960px) {
+  .lot-list-shell { padding: 28px 24px; }
+  .lot-list-header { flex-direction: column; align-items: flex-start; }
+  .lot-list-reset { justify-content: flex-start; }
+}
+
+@media (max-width: 640px) {
+  .lot-list-page { padding: 32px 14px 64px; }
+  .lot-list-shell { padding: 24px 18px 30px; }
+}
+

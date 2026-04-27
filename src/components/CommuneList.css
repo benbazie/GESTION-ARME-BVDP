@@ -1,0 +1,179 @@
+/* CommuneList.css */
+
+:root {
+  --primary: #0077cc;
+  --secondary: #00a2ff;
+  --accent: #00e676;
+  --bg-light: #edf2f7;
+  --bg-white: #ffffff;
+  --text-color: #333;
+  --font-title: 'Orbitron', sans-serif;
+  --font-body: 'Roboto', sans-serif;
+  --transition-speed: 0.3s;
+}
+
+/* Global styling */
+body {
+  font-family: var(--font-body);
+  color: var(--text-color);
+  background: var(--bg-light);
+}
+
+/* Main container */
+.commune-list-container {
+  padding: 30px;
+  max-width: 1100px;
+  margin: 40px auto;
+  background: linear-gradient(135deg, var(--bg-light), var(--bg-white));
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  transition: all var(--transition-speed) ease;
+}
+
+/* Title */
+.commune-list-title {
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 40px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--primary);
+  border-bottom: 2px solid var(--primary);
+  padding-bottom: 10px;
+  font-family: var(--font-title);
+}
+
+/* Filter bar styles */
+.filter-bar, .commune-header-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  margin-bottom: 20px;
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.filter-label {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+/* Customized select and input */
+.commune-filter-select,
+.commune-search-input {
+  width: 100%;
+  max-width: 220px;
+  padding: 8px;
+  font-size: 16px;
+  background: var(--bg-white);
+  color: var(--text-color);
+  border: 1px solid var(--primary);
+  border-radius: 4px;
+  transition: border var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+}
+
+.commune-filter-select:focus,
+.commune-filter-select:hover,
+.commune-search-input:focus,
+.commune-search-input:hover {
+  border-color: var(--secondary);
+  box-shadow: 0 0 8px rgba(0,95,163,0.4);
+}
+
+/* Action buttons */
+.add-btn {
+  font-size: 16px;
+  max-width: 220px;
+  padding: 10px;
+  background: var(--secondary);
+  color: var(--bg-white);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,176,255,0.6);
+  transition: background var(--transition-speed) ease, transform var(--transition-speed) ease;
+}
+
+.add-btn:hover {
+  background: var(--primary);
+  transform: scale(1.05);
+}
+
+/* Table styles */
+.commune-list-table {
+  background: var(--bg-white);
+  color: var(--text-color);
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+  margin-top: 20px;
+}
+
+.ant-table-tbody > tr > td {
+  padding: 8px 12px !important;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+/* Summary styles */
+.commune-summary {
+  margin-top: 30px;
+  text-align: center;
+  font-size: 20px;
+  color: var(--primary);
+  padding: 15px;
+  border-top: 2px solid var(--primary);
+}
+
+.commune-summary-title {
+  margin-bottom: 10px;
+  font-size: 28px;
+  color: var(--primary);
+}
+
+/* Styles pour l'impression */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .print-area, .print-area * {
+    visibility: visible;
+  }
+  .print-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    padding: 20px;
+    background: white;
+  }
+  .no-print {
+    display: none;
+  }
+}
+
+/* Styles pour le header et footer d'impression */
+.print-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.print-header h1 {
+  font-family: var(--font-title);
+  font-size: 36px;
+  color: var(--primary);
+}
+
+.print-footer {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 16px;
+  color: var(--text-color);
+}
