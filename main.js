@@ -5,6 +5,8 @@ const path = require('path')
 const { app, BrowserWindow, ipcMain, Menu, dialog, protocol } = require('electron')
 const fetch = require('node-fetch')
 
+
+
 let mainWindow = null
 
 // Empêche plusieurs instances (et donc plusieurs serveurs API locaux concurrents)

@@ -5,5 +5,7 @@ out/
 # Docker data (local only)
 .docker/
 
-# Local env overrides
+# Env files (contiennent des secrets)
+.env
 .env.local
+.env.production
