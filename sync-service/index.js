@@ -1,7 +1,10 @@
 const express = require('express');
 const { startCron } = require('./jobs/syncJob');
+const photosRouter = require('./routes/photos');
 
 const app = express();
+
+app.use('/photos', photosRouter);
 
 startCron();
 

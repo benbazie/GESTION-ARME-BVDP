@@ -64,6 +64,8 @@ const GeolocalisationForm             = lazyWithFallback(() => import('./compone
 const CarteVisuel                     = lazyWithFallback(() => import('./components/CarteVisuel'))
 const MagasinList                     = lazyWithFallback(() => import('./components/MagasinList'))
 const MagasinForm                     = lazyWithFallback(() => import('./components/MagasinForm'))
+const MagasinDetail                   = lazyWithFallback(() => import('./components/MagasinDetail'))
+const ReintegrationPage               = lazyWithFallback(() => import('./components/ReintegrationPage'))
 const StockList                       = lazyWithFallback(() => import('./components/StockList'))
 const AuditLogs                       = lazyWithFallback(() => import('./components/AuditLogs'))
 const SyncLogs                        = lazyWithFallback(() => import('./components/SyncLogs'))
@@ -237,6 +239,7 @@ export default function App() {
           {/* dotations & DDR */}
           <Route path='dotation-arme' element={<DotationArmeList />} />
           <Route path='dotation-arme/add' element={<DotationArmeForm />} />
+          <Route path='dotation-arme/:id' element={<DotationArmeForm />} />
 
           <Route path='dotation-munition' element={<DotationMunitionList />} />
           <Route path='dotation-munition/add' element={<DotationMunitionForm />} />
@@ -271,7 +274,10 @@ export default function App() {
           {/* magasin & stock */}
           <Route path='magasin' element={<MagasinList />} />
           <Route path='magasin/add' element={<MagasinForm />} />
+          <Route path='magasin/edit/:id' element={<MagasinForm />} />
+          <Route path='magasin/:id' element={<MagasinDetail />} />
           <Route path='stock' element={<StockList />} />
+          <Route path='reintegration' element={<ReintegrationPage />} />
 
           {/* système */}
           <Route path='audit-logs' element={<AuditLogs />} />

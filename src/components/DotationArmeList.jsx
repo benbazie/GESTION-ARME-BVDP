@@ -28,13 +28,16 @@ import {
   FilePdfOutlined,
   FilterOutlined,
   PlusOutlined,
-  ReloadOutlined
+  ReloadOutlined,
+  RollbackOutlined
 } from "@ant-design/icons";
 import dayjs from "dayjs";
 import PivotTableUI from "react-pivottable/PivotTableUI";
 import "react-pivottable/pivottable.css";
 import { useNavigate } from "react-router-dom";
 import api from "../api";
+import DotationRetourModal from "./DotationRetourModal";
+import { printBordereauIndividuel, printPVCollectif } from "../utils/dotationPrint";
 import "./DotationArmeList.css";
 
 const { Title, Text } = Typography;
@@ -396,6 +399,7 @@ const DotationArmeList = () => {
   const [columnOrder, setColumnOrder] = useState(COLUMN_ORDER);
   const [columnsDrawerOpen, setColumnsDrawerOpen] = useState(false);
   const [expandedRowKeys, setExpandedRowKeys] = useState([]);
+  const [retourModal, setRetourModal] = useState({ open: false, dotation: null });
 
   useEffect(() => {
     const defaults = DEFAULT_VISIBLE_COLUMNS[activeTab] || DEFAULT_VISIBLE_COLUMNS.individuelle;
@@ -744,6 +748,17 @@ const DotationArmeList = () => {
           source_arme_nom: sourceEnriched.source_arme_nom ?? dotationData?.source_arme_nom,
           source_nom: sourceEnriched.source_nom ?? dotationData?.source_nom
         };
+        const beneficiary = dotationData.beneficiary_type === 'vdp'
+          ? {
+              nom: dotationData.vdp_nom,
+              prenom: dotationData.vdp_prenom,
+              numero_cnib: dotationData.numero_cnib,
+              contacts: dotationData.contacts
+            }
+          : {
+              nom: dotationData.entite_nom || dotationData.coordination_nom,
+              code: dotationData.entite_code
+            };
         const enriched = {
           dotation: resolvedDotation,
           items: resolvedItems,
@@ -893,32 +908,57 @@ const DotationArmeList = () => {
     [orderedColumnKeys]
   );
 
+  const handlePrintRow = useCallback(async (record) => {
+    let full = record;
+    // Charger le détail complet avec items si pas encore disponible
+    if (!Array.isArray(record.items) || !record.items.length) {
+      try {
+        const detail = await api.getDotationDetail(record.id);
+        full = detail?.dotation ? { ...detail.dotation, items: detail.items || [] } : detail;
+      } catch (err) {
+        message.error('Impossible de charger le détail pour impression.');
+        return;
+      }
+    }
+    if ((full.dotation_type || record.dotation_type) === 'collective' ||
+        (full.beneficiary_type || record.beneficiary_type) === 'entite') {
+      printPVCollectif(full);
+    } else {
+      printBordereauIndividuel(full);
+    }
+  }, []);
+
   const tableColumns = useMemo(() => {
     return [
       ...flatColumns,
       {
         title: "Actions",
         fixed: "right",
-        width: 220,
+        width: 250,
         render: (_, record) => (
           <Space>
             <Tooltip title="Détail">
               <Button
                 icon={<EyeOutlined />}
                 onClick={() => {
-                  // Ajoute l'id à la liste des lignes expandues
                   setExpandedRowKeys((prev) =>
                     prev.includes(record.id)
                       ? prev.filter((k) => k !== record.id)
                       : [...prev, record.id]
                   );
-                  // Charge le détail si besoin
                   loadRowDetail(record);
                 }}
               />
             </Tooltip>
             <Tooltip title="Modifier">
               <Button icon={<EditOutlined />} onClick={() => navigate(`/dashboard/dotation-arme/${record.id}`)} />
+            </Tooltip>
+            <Tooltip title="Imprimer fiche">
+              <Button
+                icon={<FilePdfOutlined />}
+                style={{ color: '#722ed1', borderColor: '#722ed1' }}
+                onClick={() => handlePrintRow(record)}
+              />
             </Tooltip>
             <Tooltip title="Suivi">
               <Button
@@ -928,6 +968,21 @@ const DotationArmeList = () => {
                 }
               />
             </Tooltip>
+            {!['returned', 'cloturee', 'annulee'].includes(record.statut) && (
+              <Tooltip title="Retour de dotation">
+                <Button
+                  icon={<RollbackOutlined />}
+                  style={{ color: '#fa8c16', borderColor: '#fa8c16' }}
+                  onClick={async () => {
+                    let full = record;
+                    if (!Array.isArray(record.items)) {
+                      try { full = await api.getDotationDetail(record.id); } catch (_) {}
+                    }
+                    setRetourModal({ open: true, dotation: full });
+                  }}
+                />
+              </Tooltip>
+            )}
             <Tooltip title="Supprimer">
               <Button danger icon={<DeleteOutlined />} onClick={() => deleteDotation(record.id)} />
             </Tooltip>
@@ -935,7 +990,7 @@ const DotationArmeList = () => {
         )
       }
     ];
-  }, [flatColumns, navigate, openFollowDrawer, loadRowDetail]);
+  }, [flatColumns, navigate, openFollowDrawer, loadRowDetail, handlePrintRow]);
 
   const printableColumns = useMemo(() => flatColumns, [flatColumns]);
 
@@ -1254,6 +1309,20 @@ const DotationArmeList = () => {
           </Button>
         </Space>
       </Drawer>
+
+      {/* Modal workflow retour */}
+      <DotationRetourModal
+        open={retourModal.open}
+        dotation={retourModal.dotation}
+        onClose={() => setRetourModal({ open: false, dotation: null })}
+        onSuccess={(updated) => {
+          // Met à jour la ligne dans la liste locale sans recharger tout
+          setDotations((prev) =>
+            prev.map((d) => (d.id === updated?.id ? { ...d, ...updated } : d))
+          );
+          setRetourModal({ open: false, dotation: null });
+        }}
+      />
 
       <div style={{ display: "none" }}>
         <div ref={printRef}>

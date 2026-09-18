@@ -165,24 +165,30 @@ module.exports = {
 
   dotationsByResource: wrap(async () =>
     dbAll(
-      `SELECT COALESCE(ressource_type,'Inconnu') AS name,
-              COUNT(*)                           AS value
-       FROM dotations
-       WHERE deleted_at IS NULL
-       GROUP BY ressource_type
+      `SELECT COALESCE(di.resource_type, 'Inconnu') AS name,
+              COUNT(DISTINCT d.id)                  AS value
+       FROM dotations d
+       LEFT JOIN dotation_items di ON di.dotation_id = d.id AND di.deleted_at IS NULL
+       WHERE d.deleted_at IS NULL
+       GROUP BY di.resource_type
        ORDER BY value DESC, name`
     )
   ),
 
+  dotationsSummary: wrap(async () => {
+    const dotationCtrl = require('./dotationController');
+    return dotationCtrl.getDashboardStats();
+  }),
+
   dotationsTimeSeries: wrap(async () =>
     dbAll(
-      `SELECT DATE(date_dotation) AS date,
+      `SELECT date_dotation::date AS date,
               COUNT(*)            AS total
        FROM dotations
        WHERE deleted_at IS NULL
          AND date_dotation IS NOT NULL
-       GROUP BY DATE(date_dotation)
-       ORDER BY DATE(date_dotation)`
+       GROUP BY date_dotation::date
+       ORDER BY date_dotation::date`
     )
   ),
 
@@ -201,14 +207,14 @@ module.exports = {
     dbAll(
       `SELECT CASE
                WHEN date_naissance IS NULL THEN 'Inconnu'
-               WHEN (julianday('now') - julianday(date_naissance)) / 365.25 < 18 THEN '0-17'
-               WHEN (julianday('now') - julianday(date_naissance)) / 365.25 BETWEEN 18 AND 30 THEN '18-30'
-               WHEN (julianday('now') - julianday(date_naissance)) / 365.25 BETWEEN 31 AND 50 THEN '31-50'
+               WHEN EXTRACT(YEAR FROM AGE(date_naissance)) < 18  THEN '0-17'
+               WHEN EXTRACT(YEAR FROM AGE(date_naissance)) <= 30 THEN '18-30'
+               WHEN EXTRACT(YEAR FROM AGE(date_naissance)) <= 50 THEN '31-50'
                ELSE '51+' END AS name,
               COUNT(*) AS value
        FROM vdp
        WHERE deleted_at IS NULL
-       GROUP BY name
+       GROUP BY 1
        ORDER BY value DESC, name`
     )
   ),

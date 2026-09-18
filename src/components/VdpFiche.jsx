@@ -22,6 +22,7 @@ import api from "../api";
 import moment from "moment";
 import { useNavigate, useParams } from "react-router-dom";
 import "./VdpFiche.css";
+import VdpDotationsSection from './VdpDotationsSection';
 
 const resolveApiBase = () => {
   const candidate =
@@ -855,6 +856,7 @@ export default function VdpFiche() {
                 {observationText}
               </div>
             </Card>
+            <VdpDotationsSection vdpId={vdp?.id} />
           </Space>
         </Col>
       </Row>

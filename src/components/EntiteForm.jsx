@@ -129,6 +129,12 @@ export default function EntiteForm() {
   const [communes, setCommunes] = useState([]);
   const [localites, setLocalites] = useState([]);
   const [entitesMeres, setEntitesMeres] = useState([]);
+  const [filteredProvinces, setFilteredProvinces] = useState([]);
+  const [filteredCommunes, setFilteredCommunes] = useState([]);
+  const [filteredLocalites, setFilteredLocalites] = useState([]);
+  const [selectedRegionId, setSelectedRegionId] = useState(null);
+  const [selectedProvinceId, setSelectedProvinceId] = useState(null);
+  const [selectedCommuneId, setSelectedCommuneId] = useState(null);
   const [coordinationRegionales, setCoordinationRegionales] = useState([]);
   const [coordinationProvinciales, setCoordinationProvinciales] = useState([]);
   const [coordinationCommunales, setCoordinationCommunales] = useState([]);
@@ -199,6 +205,40 @@ export default function EntiteForm() {
     isMountedRef.current = true;
     return () => { isMountedRef.current = false; };
   }, []);
+
+  // Re-appliquer le filtre géographique quand les données chargent (cas édition)
+  useEffect(() => {
+    if (!provinces.length) return;
+    const rid = form.getFieldValue('region_id');
+    if (rid != null) {
+      setSelectedRegionId(rid);
+      setFilteredProvinces(provinces.filter(p => String(p.region_id) === String(rid)));
+    } else {
+      setFilteredProvinces([...provinces]);
+    }
+  }, [provinces]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (!communes.length) return;
+    const pid = form.getFieldValue('province_id');
+    if (pid != null) {
+      setSelectedProvinceId(pid);
+      setFilteredCommunes(communes.filter(c => String(c.province_id) === String(pid)));
+    } else {
+      setFilteredCommunes([...communes]);
+    }
+  }, [communes]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (!localites.length) return;
+    const cid = form.getFieldValue('commune_id');
+    if (cid != null) {
+      setSelectedCommuneId(cid);
+      setFilteredLocalites(localites.filter(l => String(l.commune_id) === String(cid)));
+    } else {
+      setFilteredLocalites([...localites]);
+    }
+  }, [localites]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     loadLookups();
@@ -348,20 +388,31 @@ export default function EntiteForm() {
   }, [regions, provinces, communes, localites]);
 
   const handleRegionChange = useCallback((value) => {
-    form.setFieldsValue({ region_id: value || undefined, province_id: undefined, commune_id: undefined, localite_id: undefined });
-  }, [form]);
+    const rid = value || null;
+    setSelectedRegionId(rid);
+    setSelectedProvinceId(null);
+    setSelectedCommuneId(null);
+    setFilteredProvinces(rid != null ? provinces.filter(p => String(p.region_id) === String(rid)) : [...provinces]);
+    setFilteredCommunes([]);
+    setFilteredLocalites([]);
+    form.setFieldsValue({ province_id: undefined, commune_id: undefined, localite_id: undefined, village_secteur_id: undefined });
+  }, [form, provinces]);
 
   const handleProvinceChange = useCallback((value) => {
-    form.setFieldsValue({ province_id: value || undefined, commune_id: undefined, localite_id: undefined });
-  }, [form]);
+    const pid = value || null;
+    setSelectedProvinceId(pid);
+    setSelectedCommuneId(null);
+    setFilteredCommunes(pid != null ? communes.filter(c => String(c.province_id) === String(pid)) : [...communes]);
+    setFilteredLocalites([]);
+    form.setFieldsValue({ commune_id: undefined, localite_id: undefined, village_secteur_id: undefined });
+  }, [form, communes]);
 
   const handleCommuneChange = useCallback((value) => {
-    form.setFieldsValue({
-      commune_id: value || undefined,
-      localite_id: undefined,
-      village_secteur_id: undefined,
-    });
-  }, [form]);
+    const cid = value || null;
+    setSelectedCommuneId(cid);
+    setFilteredLocalites(cid != null ? localites.filter(l => String(l.commune_id) === String(cid)) : [...localites]);
+    form.setFieldsValue({ localite_id: undefined, village_secteur_id: undefined });
+  }, [form, localites]);
 
   const handleEntityChange = useCallback(async (entiteId) => {
     form.setFieldsValue({ entite_id: entiteId || undefined });
@@ -646,7 +697,7 @@ if (!MAPTILER_KEY) {
           allowClear
           options={filteredProvinces.map(p => ({ value: p.id, label: p.nom }))}
           onChange={handleProvinceChange}
-          disabled={!regions.length}
+          disabled={!selectedRegionId}
         />
       </Form.Item>
       <Form.Item name="commune_id" label="Commune">
@@ -655,7 +706,7 @@ if (!MAPTILER_KEY) {
           allowClear
           options={filteredCommunes.map(c => ({ value: c.id, label: c.nom }))}
           onChange={handleCommuneChange}
-          disabled={!filteredProvinces.length}
+          disabled={!selectedProvinceId}
         />
       </Form.Item>
       {mode !== 'sous' && (
@@ -664,7 +715,7 @@ if (!MAPTILER_KEY) {
             placeholder="Sélectionnez une localité"
             allowClear
             options={filteredLocalites.map(l => ({ value: l.id, label: l.nom }))}
-            disabled={!filteredCommunes.length}
+            disabled={!selectedCommuneId}
           />
         </Form.Item>
       )}
@@ -676,7 +727,7 @@ if (!MAPTILER_KEY) {
           label="Localité / Secteur"
           rules={[requiredIf(() => !!form.getFieldValue('commune_id'))]}
         >
-          <Select placeholder="Sélectionnez une localité" allowClear disabled={!selectedCommune}>
+          <Select placeholder="Sélectionnez une localité" allowClear disabled={!selectedCommuneId}>
             {filteredLocalites.map(l => (
               <Option key={l.id} value={l.id}>{l.nom}</Option>
             ))}
@@ -773,7 +824,7 @@ if (!MAPTILER_KEY) {
               allowClear
               options={filteredProvinces.map(p => ({ value: p.id, label: p.nom }))}
               onChange={handleProvinceChange}
-              disabled={!filteredProvinces.length}
+              disabled={!selectedRegionId}
             />
           </Form.Item>
         )}
@@ -788,7 +839,7 @@ if (!MAPTILER_KEY) {
               allowClear
               options={filteredCommunes.map(c => ({ value: c.id, label: c.nom }))}
               onChange={handleCommuneChange}
-              disabled={!filteredCommunes.length}
+              disabled={!selectedProvinceId}
             />
           </Form.Item>
         )}
@@ -824,23 +875,6 @@ if (!MAPTILER_KEY) {
     );
   };
 
-  const filteredProvinces = useMemo(() => (
-    regions.length && regionValue
-      ? provinces.filter(p => String(p.region_id) === String(regionValue))
-      : provinces
-  ), [regionValue, provinces, regions]);
-
-  const filteredCommunes = useMemo(() => (
-    communes.length && provinceValue
-      ? communes.filter(c => String(c.province_id) === String(provinceValue))
-      : communes
-  ), [provinceValue, communes]);
-
-  const filteredLocalites = useMemo(() => (
-    localites.length && communeValue
-      ? localites.filter(l => String(l.commune_id) === String(communeValue))
-      : localites
-  ), [communeValue, localites]);
 
   return (
     <div className="entite-form">

@@ -2,7 +2,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { useParams, useNavigate } from 'react-router-dom'
-import { Form, Input, Select, Button, Card, message, Spin } from "antd";
+import { Form, Input, Select, Button, Card, message, Spin, Radio, Tooltip } from "antd";
 import api from '../api'
 const { Option } = Select
 
@@ -127,7 +127,8 @@ const ConfigArmeForm = () => {
         record.modele_arme_id ??
         (record.designation ? record.designation.toString().trim() : null),
       designation: record.designation || "",
-      code: record.code || ""
+      code: record.code || "",
+      usage_type: record.usage_type || 'individuel',
     });
   }, [isEdit, record, form]);
 
@@ -294,7 +295,8 @@ const ConfigArmeForm = () => {
       modele_id: normalizeId(cleanValues.modele_id),
       type: typeById[typeKey] || null,
       categorie: categorieById[categorieKey] || null,
-      designation: modeleById[modeleKey] || cleanValues.designation || null
+      designation: modeleById[modeleKey] || cleanValues.designation || null,
+      usage_type: cleanValues.usage_type || 'individuel',
     };
     setSubmitting(true);
     try {
@@ -401,6 +403,21 @@ const ConfigArmeForm = () => {
           </Form.Item>
           <Form.Item name="designation" label="Libellé affiché">
             <Input placeholder="Libellé affiché (écrase le modèle si rempli)" />
+          </Form.Item>
+          <Form.Item
+            name="usage_type"
+            label={
+              <Tooltip title="Détermine si cette configuration d'arme peut être dotée à un individu (VDP), à une entité/collectif, ou aux deux.">
+                Usage (dotation)
+              </Tooltip>
+            }
+            initialValue="individuel"
+          >
+            <Radio.Group>
+              <Radio value="individuel">Individuel (VDP)</Radio>
+              <Radio value="collectif">Collectif (Entité)</Radio>
+              <Radio value="les_deux">Les deux</Radio>
+            </Radio.Group>
           </Form.Item>
 
           <Form.Item>

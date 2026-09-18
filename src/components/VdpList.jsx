@@ -35,6 +35,7 @@ import {
   ArrowUpOutlined,
   ArrowDownOutlined,
   EditOutlined,
+  SyncOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import api from "../api";
@@ -128,6 +129,8 @@ export default function VdpList() {
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewLoading, setPreviewLoading] = useState(false);
   const [previewData, setPreviewData] = useState(null);
+  const [syncing, setSyncing] = useState(false);
+  const [reloadKey, setReloadKey] = useState(0);
   const navigate = useNavigate();
 
   const closeCrossModal = useCallback(() => {
@@ -361,6 +364,20 @@ export default function VdpList() {
         setLoading(false);
       }
     })();
+  }, [reloadKey]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const handleSyncVdp = useCallback(async () => {
+    setSyncing(true);
+    try {
+      await api.triggerVdpSync();
+      message.success('Synchronisation VDP terminée. Rechargement de la liste...');
+      setReloadKey(k => k + 1);
+    } catch (err) {
+      const detail = err?.response?.data?.error || err?.message || 'Erreur inconnue';
+      message.error(`Échec de la synchronisation : ${detail}`);
+    } finally {
+      setSyncing(false);
+    }
   }, []);
 
   // Chargement de la configuration d'en-tête/pied de page
@@ -435,8 +452,13 @@ export default function VdpList() {
         dataIndex: "photo",
         width: 90,
         align: "center",
-        render: (value) => {
-          const src = normalizePhotoValue(value);
+        render: (value, row) => {
+          // Priorité 1 : photo directe (base64 / data URL)
+          const direct = normalizePhotoValue(value);
+          // Priorité 2 : photo depuis volontaire_photo via l'API (id_identification = id GREFIH)
+          const idIdent = row?.id_identification;
+          const apiSrc = !direct && idIdent ? `/api/vdp/photo/${idIdent}` : null;
+          const src = direct || apiSrc;
           if (!src) return <span style={{ color: "#bbb" }}>—</span>;
           return (
             <img
@@ -452,8 +474,7 @@ export default function VdpList() {
               }}
               onError={(event) => {
                 event.currentTarget.onerror = null;
-                event.currentTarget.src =
-                  "https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg";
+                event.currentTarget.style.display = "none";
               }}
             />
           );
@@ -1104,6 +1125,14 @@ export default function VdpList() {
               onClick={() => navigate("/dashboard/vdp/add")}
             >
               Ajouter un VDP
+            </Button>
+            <Button
+              icon={<SyncOutlined spin={syncing} />}
+              loading={syncing}
+              onClick={handleSyncVdp}
+              title="Charger / mettre à jour les VDPs depuis l'API Keycloak"
+            >
+              Sync depuis API
             </Button>
             <Button icon={<ColumnWidthOutlined />} onClick={() => setColumnConfigModalVisible(true)}>
               Colonnes

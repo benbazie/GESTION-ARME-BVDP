@@ -185,7 +185,9 @@ const TABLES = [
   'coordination_provinciale',
   'coordination_communale',
   'dotations','dotation_items','dotation_history','chain_of_custody',
-  'sources_armes' // <-- ajouté pour exposer /api/sources_armes
+  'sources_armes',
+  // Phase 1 — Module Magasin
+  'magasins','stock_magasin','mouvements_magasin','dotation_logs',
 ];
 
 const EXPORT_TABLES = [
@@ -491,11 +493,25 @@ const createGenericListHandler = ({ table, tbl }) => (req, res) => {
     if (!includeDeleted) clauses.push('a.deleted_at IS NULL');
     if (scopeWhere.clause) clauses.push(scopeWhere.clause);
     const where = clauses.length ? ` WHERE ${clauses.join(' AND ')}` : '';
+    const extraClauses = [];
+    if (req.query?.statut === 'disponible') {
+      // 'disponible' = tout statut sauf les armes déjà dotées
+      extraClauses.push(`(a.statut IS NULL OR a.statut NOT IN ('dotée','dotee'))`);
+    } else if (req.query?.statut) {
+      extraClauses.push(`a.statut = ?`);
+      scopeWhere.params.push(req.query.statut);
+    }
+    if (req.query?.etat)          extraClauses.push(`a.etat = ?`),     scopeWhere.params.push(req.query.etat);
+    if (req.query?.magasin_id)    extraClauses.push(`a.magasin_id = ?`), scopeWhere.params.push(req.query.magasin_id);
+    const finalWhere = [...clauses, ...extraClauses].length
+      ? ` WHERE ${[...clauses, ...extraClauses].join(' AND ')}`
+      : '';
     const query = `
-      SELECT a.*, c.type AS type, c.categorie AS categorie
+      SELECT a.*, c.type AS type, c.categorie AS categorie,
+             COALESCE(a.usage_type, c.usage_type, 'les_deux') AS usage_type
       FROM armes a
       LEFT JOIN config_arme c ON c.id = a.config_arme_id
-      ${where}
+      ${finalWhere}
     `;
     dbModule.db.all(query, scopeWhere.params, (err, rows) => {
       if (err) {
@@ -935,6 +951,16 @@ authRouter.post('/login', async (req, res, next) => {
       payload.permissions = permissions;
     }
 
+    // Magasins dont l'utilisateur est gestionnaire
+    const magasinIds = await new Promise((r, j) =>
+      dbModule.db.all(
+        'SELECT id FROM magasins WHERE gestionnaire_id = ? AND deleted_at IS NULL',
+        [user.id],
+        (e, rows) => e ? j(e) : r((rows || []).map(x => x.id))
+      )
+    ).catch(() => []);
+    payload.magasin_ids = magasinIds;
+
     const token = jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN })
     res.json({ token, user: payload })
   } catch (err) { next(err) }
@@ -942,15 +968,23 @@ authRouter.post('/login', async (req, res, next) => {
 
 authRouter.get('/me', authMW, async (req, res, next) => {
   try {
-    const [perms, roleNames] = await Promise.all([
+    const [perms, roleNames, magasinRows] = await Promise.all([
       resolveUserPermissions(req.user.id).catch(() => []),
       resolveUserRoleNames(req.user.id).catch(() => []),
+      new Promise((r, j) =>
+        dbModule.db.all(
+          'SELECT id FROM magasins WHERE gestionnaire_id = ? AND deleted_at IS NULL',
+          [req.user.id],
+          (e, rows) => e ? j(e) : r(rows || [])
+        )
+      ).catch(() => []),
     ])
     res.json({
       id: req.user.id,
       username: req.user.username,
       roles: roleNames,
       permissions: perms,
+      magasin_ids: magasinRows.map(r => r.id),
       ...extractScope(req.user || {})
     })
   } catch (e) { next(e) }
@@ -1102,8 +1136,229 @@ adminRouter.put('/users/:id/password', authMW, permissionGuard('utilisateurs_man
 
 app.use('/api/admin', adminRouter)
 
-// Generic CRUD scaffolding for TABLES (if no custom route file)
-const SKIP_GENERIC_TABLES = new Set(['dotations']);
+// ─── Module Magasin (Phase 1) ────────────────────────────────────────────────
+// Monté AVANT le generic CRUD pour que les sous-routes /:id/stock etc. ne soient
+// pas interceptées par le handler générique /:id.
+;(function mountMagasinsRouter() {
+  try {
+    const magasinsRouter = require('./routes/magasins');
+    app.use('/api/magasins', authMW, magasinsRouter);
+    console.log('[server] monté routes/magasins.js -> /api/magasins');
+  } catch (e) {
+    console.warn('[server] routes/magasins.js indisponible :', e.message);
+  }
+})();
+
+// GET /api/vdp/search?term=xxx&limit=50
+app.get('/api/vdp/search', authMW, (req, res) => {
+  const term = (req.query.term || req.query.q || req.query.search || '').trim();
+  const limit = Math.min(parseInt(req.query.limit || '50', 10), 200);
+  if (!term) return res.json([]);
+  const like = `%${term}%`;
+  const sql = `
+    SELECT v.id, v.nom, v.prenom, v.numero_cnib, v.contacts, v.statut_vdp,
+           v.photo, v.entite_id, v.sous_entite_id, v.coordination_id,
+           e.nom AS entite_nom
+    FROM vdp v
+    LEFT JOIN entites e ON e.id = v.entite_id
+    WHERE v.deleted_at IS NULL
+      AND (
+        LOWER(COALESCE(v.nom,''))         LIKE LOWER(?) OR
+        LOWER(COALESCE(v.prenom,''))      LIKE LOWER(?) OR
+        LOWER(COALESCE(v.numero_cnib,'')) LIKE LOWER(?) OR
+        LOWER(COALESCE(v.contacts,''))    LIKE LOWER(?) OR
+        LOWER(COALESCE(v.nom,'') || ' ' || COALESCE(v.prenom,'')) LIKE LOWER(?)
+      )
+    LIMIT ?
+  `;
+  dbModule.db.all(sql, [like, like, like, like, like, limit], (err, rows) => {
+    if (err) return res.status(500).json({ error: 'Erreur BD', detail: err.message });
+    res.json(rows || []);
+  });
+});
+
+// GET /api/entites/search?term=xxx&limit=50
+app.get('/api/entites/search', authMW, (req, res) => {
+  const term = (req.query.term || req.query.q || req.query.search || '').trim();
+  const limit = Math.min(parseInt(req.query.limit || '50', 10), 200);
+  if (!term) return res.json([]);
+  const like = `%${term}%`;
+  const sql = `
+    SELECT id, nom, code, type
+    FROM entites
+    WHERE deleted_at IS NULL
+      AND (LOWER(COALESCE(nom,'')) LIKE LOWER(?) OR LOWER(COALESCE(code,'')) LIKE LOWER(?))
+    LIMIT ?
+  `;
+  dbModule.db.all(sql, [like, like, limit], (err, rows) => {
+    if (err) return res.status(500).json({ error: 'Erreur BD', detail: err.message });
+    res.json(rows || []);
+  });
+});
+
+// GET /api/armes/search?term=xxx&limit=50
+app.get('/api/armes/search', authMW, (req, res) => {
+  const term = (req.query.term || req.query.q || '').trim();
+  const limit = Math.min(parseInt(req.query.limit || '50', 10), 200);
+  if (!term) return res.json([]);
+  const like = `%${term}%`;
+  const sql = `
+    SELECT a.*, c.type AS type, c.categorie AS categorie
+    FROM armes a
+    LEFT JOIN config_arme c ON c.id = a.config_arme_id
+    WHERE a.deleted_at IS NULL
+      AND (LOWER(COALESCE(a.numero_serie,'')) LIKE LOWER(?) OR LOWER(COALESCE(a.designation,'')) LIKE LOWER(?))
+    LIMIT ?
+  `;
+  dbModule.db.all(sql, [like, like, limit], (err, rows) => {
+    if (err) return res.status(500).json({ error: 'Erreur BD', detail: err.message });
+    res.json(rows || []);
+  });
+});
+
+// GET /api/armes/:id/fiche  — fiche complète : arme + historique dotations + mouvements magasin
+app.get('/api/armes/:id/fiche', authMW, async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const arme = await dbModule.db.get(`
+      SELECT
+        a.*,
+        ca.designation  AS config_designation,
+        ca.type         AS config_type,
+        ca.categorie    AS config_categorie,
+        ca.calibre      AS config_calibre,
+        ca.marque       AS config_marque,
+        m.nom           AS magasin_nom,
+        m.code          AS magasin_code,
+        l.designation   AS lot_designation,
+        l.code          AS lot_code
+      FROM armes a
+      LEFT JOIN config_arme ca ON ca.id = a.config_arme_id
+      LEFT JOIN magasins     m  ON m.id  = a.magasin_id
+      LEFT JOIN lots         l  ON l.id  = a.lot_id
+      WHERE a.id = ? AND a.deleted_at IS NULL
+    `, [id]);
+
+    if (!arme) return res.status(404).json({ error: 'Arme introuvable' });
+
+    const dotations = await dbModule.db.all(`
+      SELECT
+        di.id            AS dotation_item_id,
+        di.status        AS item_status,
+        di.condition_retour,
+        di.returned_at,
+        di.quantite,
+        d.id             AS dotation_id,
+        d.code           AS dotation_code,
+        d.dotation_type,
+        d.date_dotation,
+        d.statut         AS dotation_statut,
+        v.nom            AS vdp_nom,
+        v.prenom         AS vdp_prenom,
+        v.numero_cnib    AS vdp_cnib,
+        e.nom            AS entite_nom
+      FROM dotation_items di
+      JOIN dotations d ON d.id = di.dotation_id
+      LEFT JOIN vdp     v ON v.id = d.vdp_id    AND d.beneficiary_type = 'vdp'
+      LEFT JOIN entites e ON e.id = d.entite_id  AND d.beneficiary_type = 'entite'
+      WHERE di.resource_type = 'arme' AND di.resource_id = ?
+      ORDER BY d.date_dotation DESC
+    `, [id]);
+
+    const mouvements = await dbModule.db.all(`
+      SELECT mv.*, mag.nom AS magasin_nom
+      FROM mouvements_magasin mv
+      LEFT JOIN magasins mag ON mag.id = mv.magasin_id
+      WHERE mv.resource_type = 'arme' AND mv.resource_id = ?
+      ORDER BY mv.date_mouvement DESC
+      LIMIT 50
+    `, [id]);
+
+    return res.json({ arme, dotations: dotations || [], mouvements: mouvements || [] });
+  } catch (err) {
+    console.error('[armes] fiche:', err.message);
+    return res.status(500).json({ error: 'Erreur BD', detail: err.message });
+  }
+});
+
+// GET /api/vdp/:id/dotations — historique complet des dotations d'un VDP
+app.get('/api/vdp/:id/dotations', authMW, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const items = await dbModule.db.all(`
+      SELECT
+        d.id             AS dotation_id,
+        d.code           AS dotation_code,
+        d.dotation_type,
+        d.date_dotation,
+        d.statut         AS dotation_statut,
+        di.id            AS item_id,
+        di.resource_type,
+        di.resource_id,
+        di.status        AS item_status,
+        di.condition_retour,
+        di.returned_at,
+        di.quantite,
+        a.numero_serie,
+        COALESCE(ca.designation, a.designation) AS arme_designation,
+        a.etat           AS arme_etat,
+        a.statut         AS arme_statut,
+        a.magasin_id     AS arme_magasin_id,
+        mag.nom          AS arme_magasin_nom
+      FROM dotations d
+      JOIN dotation_items di ON di.dotation_id = d.id
+      LEFT JOIN armes       a   ON di.resource_type = 'arme'  AND a.id  = di.resource_id
+      LEFT JOIN config_arme ca  ON ca.id = a.config_arme_id
+      LEFT JOIN magasins    mag ON mag.id = a.magasin_id
+      WHERE d.vdp_id = ? AND d.deleted_at IS NULL
+      ORDER BY d.date_dotation DESC, di.id ASC
+    `, [id]);
+    return res.json(items || []);
+  } catch (err) {
+    console.error('[vdp] dotations:', err.message);
+    return res.status(500).json({ error: 'Erreur BD', detail: err.message });
+  }
+});
+
+// GET /api/vdp/photo/:idIdentification — photo bytea depuis volontaire_photo
+app.get('/api/vdp/photo/:idIdentification', authMW, async (req, res) => {
+  const idVolontaire = parseInt(req.params.idIdentification, 10);
+  if (isNaN(idVolontaire)) return res.status(400).json({ error: 'id invalide' });
+  try {
+    const result = await dbModule.pool.query(
+      'SELECT photo, etag, last_modified FROM volontaire_photo WHERE id_volontaire = $1',
+      [idVolontaire]
+    );
+    if (!result.rows.length) return res.status(404).json({ error: 'Photo introuvable' });
+    const { photo, etag, last_modified } = result.rows[0];
+    if (etag) res.setHeader('ETag', etag);
+    if (last_modified) res.setHeader('Last-Modified', new Date(last_modified).toUTCString());
+    res.setHeader('Cache-Control', 'private, max-age=86400');
+    const clientEtag = req.headers['if-none-match'];
+    if (clientEtag && clientEtag === etag) return res.status(304).end();
+    res.setHeader('Content-Type', 'image/jpeg');
+    res.send(photo);
+  } catch (err) {
+    console.error('[vdp/photo]', err.message);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST /api/sync/vdp/trigger — synchronisation manuelle des VDPs depuis l'API Keycloak
+app.post('/api/sync/vdp/trigger', authMW, async (req, res) => {
+  try {
+    const { syncVolontaires } = require('./sync-service/services/volontaireService');
+    await syncVolontaires();
+    res.json({ success: true, message: 'Synchronisation VDP terminée avec succès' });
+  } catch (err) {
+    console.error('[sync/vdp/trigger]', err.message);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// 'magasins' : router dédié monté plus haut avec sous-routes /:id/stock etc.
+const SKIP_GENERIC_TABLES = new Set(['dotations', 'magasins']);
 
 TABLES.forEach(tbl => {
   if (SKIP_GENERIC_TABLES.has(tbl)) return;
@@ -1500,6 +1755,18 @@ TABLES.forEach(tbl => {
     }
   } catch (e) {
     console.warn('[server] app_config is_active migration ignorée:', e && e.message);
+  }
+})();
+
+// Migration : usage_type sur config_arme (individuel / collectif / les_deux)
+(async () => {
+  try {
+    const cols = await listTableColumns('config_arme');
+    if (!Array.isArray(cols) || cols.includes('usage_type')) return;
+    await dbModule.run(`ALTER TABLE config_arme ADD COLUMN IF NOT EXISTS usage_type TEXT DEFAULT 'individuel';`);
+    console.log('[server] Migration config_arme.usage_type appliquée.');
+  } catch (e) {
+    console.warn('[server] Migration config_arme.usage_type ignorée:', e && e.message);
   }
 })();
 

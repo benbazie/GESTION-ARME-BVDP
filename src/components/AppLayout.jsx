@@ -24,6 +24,7 @@ import {
   DownloadOutlined,
   SaveOutlined,
   ExclamationCircleOutlined,
+  BankOutlined,
 } from "@ant-design/icons";
 import ExportHeaderFooterConfig from "./ExportHeaderFooterConfig";
 import api from "../api";
@@ -943,8 +944,15 @@ export default function AppLayout() {
         .filter(Boolean)
         .forEach((role) => rolePool.add(role));
     }
-    return Array.from(rolePool).some((role) => role === 'admin' || role === 'role_admin');
+    return Array.from(rolePool).some((role) => role === 'admin' || role === 'role_admin' || role === 'superadmin');
   }, [user]);
+
+  const isGestionnaire = useMemo(() => {
+    if (!user || isAdminRole) return false;
+    return normalizeRoleNames(user.roles)
+      .map((r) => r.toLowerCase())
+      .some((r) => r === 'gestionnaire');
+  }, [user, isAdminRole]);
   const hasPermission = useCallback((permission) => {
     if (!permission) return true;
     if (permissionSet.has('*')) return true;
@@ -1092,6 +1100,11 @@ export default function AppLayout() {
       ],
     },
     {
+      key: "/magasin",
+      icon: <BankOutlined />,
+      label: <Link to="/magasin">Magasins</Link>,
+    },
+    {
       key: "dotations",
       icon: <FileOutlined />,
       label: "Dotations",
@@ -1101,6 +1114,7 @@ export default function AppLayout() {
         { key: "/dotation-optique", label: <Link to="/dotation-optique">Optique</Link> },
         { key: "/dotation-materiel", label: <Link to="/dotation-materiel">Matériel</Link> },
         { key: "/dotation-rapide", label: <Link to="/dotation-rapide">Rapide</Link> },
+        { key: "/reintegration", label: <Link to="/reintegration">Réintégration</Link> },
       ],
     },
     {
@@ -1205,6 +1219,20 @@ export default function AppLayout() {
     },
   ];
 
+  // Pour le rôle gestionnaire : menu réduit aux seules sections utiles
+  const GESTIONNAIRE_ITEM_KEYS = new Set(['/dashboard', '/magasin', 'dotations']);
+  const GESTIONNAIRE_DOTATION_KEYS = new Set(['/dotation-arme', '/reintegration']);
+
+  const visibleSidebarItems = isGestionnaire
+    ? sidebarItems
+        .filter((item) => GESTIONNAIRE_ITEM_KEYS.has(item.key))
+        .map((item) =>
+          item.key === 'dotations'
+            ? { ...item, children: item.children.filter((c) => GESTIONNAIRE_DOTATION_KEYS.has(c.key)) }
+            : item
+        )
+    : sidebarItems;
+
   const horizontalItems = [
     {
       key: "stats",
@@ -1248,7 +1276,7 @@ export default function AppLayout() {
             mode="inline"
             theme="dark"
             selectedKeys={[selectedKey]}
-            items={sidebarItems}
+            items={visibleSidebarItems}
             className="custom-menu"
           />
         </Sider>

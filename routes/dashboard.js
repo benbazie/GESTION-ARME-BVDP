@@ -27,6 +27,7 @@ router.get('/materiel/by-type',     ctrl.materielByType)
 router.get('/materiel/timeseries',  ctrl.materielTimeSeries)
 
 // Breakdown DOTATIONS
+router.get('/dotations/summary',     ctrl.dotationsSummary)
 router.get('/dotations/by-resource', ctrl.dotationsByResource)
 router.get('/dotations/timeseries',  ctrl.dotationsTimeSeries)
 

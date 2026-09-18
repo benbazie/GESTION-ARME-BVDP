@@ -35,6 +35,8 @@ import {
   ExclamationCircleOutlined,
 } from "@ant-design/icons";
 import "./Dashboard.css";
+import { usePermissions } from '../hooks/usePermissions';
+import GestionnaireDashboard from './GestionnaireDashboard';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -211,7 +213,7 @@ function buildCrossTable(data, dims) {
   return Object.entries(group).map(([name, value]) => ({ name, value }));
 }
 
-function Dashboard() {
+function DashboardInner() {
   const [filters, setFilters] = useState({ region: undefined, entite: undefined, period: [] });
   const [regions, setRegions] = useState([]);
   const [entites, setEntites] = useState([]);
@@ -804,6 +806,12 @@ function Dashboard() {
       </div>
     </>
   );
+}
+
+function Dashboard() {
+  const { isGestionnaire } = usePermissions();
+  if (isGestionnaire) return <GestionnaireDashboard />;
+  return <DashboardInner />;
 }
 
 export default Dashboard;

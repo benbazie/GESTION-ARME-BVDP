@@ -408,12 +408,7 @@ const api = {
   async searchArmes(term) {
     const query = (term || '').trim();
     if (!query) return [];
-    const bridge = typeof window !== 'undefined' ? (window.electronAPI || window.safeElectronAPI) : null;
     try {
-      if (bridge?.call) {
-        const result = await bridge.call('get', '/armes/search', { term: query });
-        return normalizeArrayResponse(result);
-      }
       const result = await call('get', '/armes/search', { term: query });
       return normalizeArrayResponse(result);
     } catch (error) {
@@ -424,12 +419,7 @@ const api = {
   async searchVdp(term) {
     const query = (term || '').trim();
     if (!query) return [];
-    const bridge = typeof window !== 'undefined' ? (window.electronAPI || window.safeElectronAPI) : null;
     try {
-      if (bridge?.call) {
-        const result = await bridge.call('get', '/vdp/search', { term: query });
-        return normalizeArrayResponse(result);
-      }
       const result = await call('get', '/vdp/search', { term: query });
       return normalizeArrayResponse(result);
     } catch (error) {
@@ -440,12 +430,7 @@ const api = {
   async searchEntites(term) {
     const query = (term || '').trim();
     if (!query) return [];
-    const bridge = typeof window !== 'undefined' ? (window.electronAPI || window.safeElectronAPI) : null;
     try {
-      if (bridge?.call) {
-        const result = await bridge.call('get', '/entites/search', { term: query });
-        return normalizeArrayResponse(result);
-      }
       const result = await call('get', '/entites/search', { term: query });
       return normalizeArrayResponse(result);
     } catch (error) {
@@ -489,10 +474,6 @@ const api = {
       return [];
     }
   },
-  createDotation: async (payload) => {
-    const response = await axiosInstance.post('/dotations', payload);
-    return response.data;
-  },
   updateDotation(id, payload) {
     return call("put", `/dotations/${id}`, payload);
   },
@@ -501,17 +482,24 @@ const api = {
   },
 }
 
-// Récupérer les dotations d'un VDP
-api.getDotationsByVdp = async (vdpId) => {
-  const response = await axios.get(`/dotations/beneficiary/vdp/${vdpId}`);
-  return response.data;
-};
+// Récupérer les dotations d'un VDP (alias sécurisé)
+api.getDotationsByVdp = (vdpId) => call('get', `/dotations/beneficiary/vdp/${vdpId}`);
 
 // Récupérer une arme par ID
 api.getArmeById = async (armeId) => {
-  const response = await axios.get(`/armes/${armeId}`);
-  return response.data;
+  return call('get', `/armes/${armeId}`);
 };
+
+// Fiche complète d'une arme : infos + historique dotations + mouvements magasin
+api.getArmeFiche = async (armeId) => {
+  return call('get', `/armes/${armeId}/fiche`);
+};
+
+// Historique complet des dotations d'un VDP (tous items, toutes dotations)
+api.getVdpDotationsHistory = (vdpId) => call('get', `/vdp/${vdpId}/dotations`);
+
+// Déclenchement manuel de la synchronisation VDP depuis l'API Keycloak
+api.triggerVdpSync = () => call('post', '/sync/vdp/trigger');
 
 // Vérification de doublon d'arme par numéro de série
 api.checkDuplicate = async (numero_serie) => {
@@ -983,11 +971,57 @@ api.fetchLocalites = fetchLocalites;
 
 // Dotation API helpers
 const dotationApi = {
-  updateDotationItemStatus: (dotationId, itemId, payload) => 
+  updateDotationItemStatus: (dotationId, itemId, payload) =>
     call('patch', `/dotations/${dotationId}/items/${itemId}/status`, payload),
-  deleteDotation: (id, options = {}) => call('delete', `/dotations/${id}`, options)
+  deleteDotation: (id, options = {}) => call('delete', `/dotations/${id}`, options),
+
+  // Workflow retour : POST /dotations/:id/retour
+  // body: { observation?, condition_retour?, items: [{ id, condition_retour, quantite_retour? }] }
+  retourDotation: (id, body = {}) =>
+    call('post', `/dotations/${id}/retour`, body),
+
+  // Changement de statut : PATCH /dotations/:id/statut
+  // body: { statut: 'active'|'cloturee'|'annulee'|... }
+  changerStatutDotation: (id, statut) =>
+    call('patch', `/dotations/${id}/statut`, { statut }),
+
+  // Transfert vers un nouveau bénéficiaire : POST /dotations/:id/transferer
+  // body: { vdp_id? | entite_id?, sous_entite_id?, coordination_id?, observation? }
+  transfererDotation: (id, body = {}) =>
+    call('post', `/dotations/${id}/transferer`, body),
+
+  // Liste dotations avec filtres (statut, resource_type, vdp_id, entite_id, q…)
+  getDotationsList: (params = {}) =>
+    call('get', '/dotations', params),
+
+  // Dashboard stats dotations enrichies
+  getDashboardDotationsSummary: () =>
+    call('get', '/dashboard/dotations/summary'),
 };
 Object.assign(api, dotationApi);
+
+// ─── Module Magasin (Phase 1) ────────────────────────────────────────────────
+const magasinApi = {
+  // CRUD
+  getMagasins:     (params = {})       => call('get',    '/magasins', params),
+  getMagasinById:  (id)                => call('get',    `/magasins/${id}`),
+  createMagasin:   (data)              => call('post',   '/magasins', data),
+  updateMagasin:   (id, data)          => call('put',    `/magasins/${id}`, data),
+  deleteMagasin:   (id)                => call('delete', `/magasins/${id}`),
+
+  // Stock
+  getStockMagasin:    (id, params = {}) => call('get',    `/magasins/${id}/stock`, params),
+  addToStockMagasin:  (id, data)        => call('post',   `/magasins/${id}/stock`, data),
+  removeFromStockMagasin: (id, data)    => call('delete', `/magasins/${id}/stock`, data),
+  getInventaireMagasin:   (id)          => call('get',    `/magasins/${id}/inventaire`),
+
+  // Mouvements
+  getMouvementsMagasin: (id, params = {}) => call('get', `/magasins/${id}/mouvements`, params),
+
+  // Réintégration VDP → magasin
+  reintegrationMagasin: (id, data) => call('post', `/magasins/${id}/reintegration`, data),
+};
+Object.assign(api, magasinApi);
 
 const normalizeDotationPayload = (input = {}) => {
   const beneficiaryRaw = (input.beneficiary_type || input.beneficiaryType || '').toString().toLowerCase();

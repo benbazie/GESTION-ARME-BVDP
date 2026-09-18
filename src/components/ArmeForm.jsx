@@ -76,6 +76,8 @@ export default function ArmeForm() {
   const [communes, setCommunes] = useState([]);
   const [allProvinces, setAllProvinces] = useState([]);
   const [allCommunes, setAllCommunes] = useState([]);
+  const [selectedRegionId, setSelectedRegionId] = useState(null);
+  const [selectedProvinceId, setSelectedProvinceId] = useState(null);
   const [positions, setPositions] = useState([
     { code: "MAGASIN", label: "En magasin" },
     { code: "REPARATION", label: "En réparation" },
@@ -126,6 +128,29 @@ export default function ArmeForm() {
   const regionValue = Form.useWatch("region_id", form);
   const provinceValue = Form.useWatch("province_id", form);
   const localiteValue = Form.useWatch("localite_id", form);
+
+  // Re-appliquer le filtre géographique quand les données chargent (cas édition)
+  useEffect(() => {
+    if (!allProvinces.length) return;
+    const rid = form.getFieldValue('region_id');
+    if (rid != null) {
+      setSelectedRegionId(rid);
+      setProvinces(allProvinces.filter(p => String(p.region_id) === String(rid)));
+    } else {
+      setProvinces([...allProvinces]);
+    }
+  }, [allProvinces]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (!allCommunes.length) return;
+    const pid = form.getFieldValue('province_id');
+    if (pid != null) {
+      setSelectedProvinceId(pid);
+      setCommunes(allCommunes.filter(c => String(c.province_id) === String(pid)));
+    } else {
+      setCommunes([...allCommunes]);
+    }
+  }, [allCommunes]); // eslint-disable-line react-hooks/exhaustive-deps
   const secondLevelChoiceValue = Form.useWatch("second_level_choice", form);
 
   // template
@@ -321,33 +346,37 @@ export default function ArmeForm() {
   }, [allCommunes]);
 
   const handleRegionChange = useCallback((regionId) => {
+    setSelectedRegionId(regionId || null);
+    setSelectedProvinceId(null);
     form.setFieldsValue({
       province_id: undefined,
       commune_id: undefined,
       localite_id: undefined,
     });
-    const provincesForRegion = loadProvinces(regionId);
     if (!regionId) {
-      setCommunes(allCommunes);
+      setProvinces([...allProvinces]);
+      setCommunes([...allCommunes]);
       setLocalites([]);
       return;
     }
-    const provinceIds = new Set(provincesForRegion.map((p) => String(p.id)));
-    const nextCommunes = allCommunes.filter((commune) =>
-      provinceIds.has(String(commune.province_id))
-    );
-    setCommunes(nextCommunes);
+    const provs = allProvinces.filter(p => String(p.region_id) === String(regionId));
+    setProvinces(provs);
+    const provinceIds = new Set(provs.map(p => String(p.id)));
+    setCommunes(allCommunes.filter(c => provinceIds.has(String(c.province_id))));
     setLocalites([]);
-  }, [allCommunes, form, loadProvinces]);
+  }, [allProvinces, allCommunes, form]);
 
   const handleProvinceChange = useCallback((provinceId) => {
-    form.setFieldsValue({
-      commune_id: undefined,
-      localite_id: undefined,
-    });
-    loadCommunes(provinceId);
+    setSelectedProvinceId(provinceId || null);
+    form.setFieldsValue({ commune_id: undefined, localite_id: undefined });
+    if (!provinceId) {
+      setCommunes([...allCommunes]);
+      setLocalites([]);
+      return;
+    }
+    setCommunes(allCommunes.filter(c => String(c.province_id) === String(provinceId)));
     setLocalites([]);
-  }, [form, loadCommunes]);
+  }, [allCommunes, form]);
 
   const handleCommuneChange = useCallback(async (communeId) => {
     form.setFieldsValue({ localite_id: undefined });
@@ -524,6 +553,9 @@ export default function ArmeForm() {
   useEffect(() => {
     (async () => {
       try {
+        const safeGet = async (fn) => {
+          try { const r = await fn(); return Array.isArray(r) ? r : []; } catch { return []; }
+        };
         const [
           cfgs,
           ents,
@@ -532,12 +564,12 @@ export default function ArmeForm() {
           comms,
           coordRegs
         ] = await Promise.all([
-          api.getConfigArmeList(),
-          api.getEntiteList(),
-          api.getRegionsList(),
-          api.getProvincesList(),
-          api.getCommunesList(),
-          api.getCoordinationRegionaleList?.() ?? api.getCoordinationRegionales?.()
+          safeGet(() => api.getConfigArmeList()),
+          safeGet(() => api.getEntiteList()),
+          safeGet(() => api.getRegionsList()),
+          safeGet(() => api.getProvincesList()),
+          safeGet(() => api.getCommunesList()),
+          safeGet(() => api.getCoordinationRegionaleList?.() ?? api.getCoordinationRegionales?.()),
         ]);
         setConfigArmes(Array.isArray(cfgs) ? cfgs : []);
         setUniqueTypes(Array.from(new Set((Array.isArray(cfgs) ? cfgs : []).map(c => c.type).filter(Boolean))));
@@ -1646,6 +1678,7 @@ export default function ArmeForm() {
                       allowClear
                       showSearch
                       optionFilterProp="children"
+                      disabled={!selectedRegionId}
                     >
                       {provinces.map(p => (
                         <Option key={p.id} value={p.id}>
@@ -1663,6 +1696,7 @@ export default function ArmeForm() {
                       allowClear
                       showSearch
                       optionFilterProp="children"
+                      disabled={!selectedProvinceId}
                     >
                       {communes.map(cm => (
                         <Option key={cm.id} value={cm.id}>
@@ -1747,6 +1781,19 @@ export default function ArmeForm() {
                       <Option value="Bon État">Bon État</Option>
                       <Option value="Mauvais État Réparable">Mauvais État Réparable</Option>
                       <Option value="Mauvais État Non Réparable">Mauvais État Non Réparable</Option>
+                    </Select>
+                  </Form.Item>
+                </Col>
+                <Col xs={24} md={6}>
+                  <Form.Item
+                    name="usage_type"
+                    label="Usage"
+                    initialValue="les_deux"
+                  >
+                    <Select placeholder="Usage">
+                      <Option value="individuel">Individuel (VDP)</Option>
+                      <Option value="collectif">Collectif (Entité)</Option>
+                      <Option value="les_deux">Les deux</Option>
                     </Select>
                   </Form.Item>
                 </Col>

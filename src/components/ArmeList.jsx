@@ -775,7 +775,7 @@ function ArmeList() {
       title: "Actions",
       key: "actions",
       fixed: "right",
-      width: 150,
+      width: 190,
       render: (_, record) => (
         <Space size="small">
           <Button
@@ -784,12 +784,22 @@ function ArmeList() {
           >
             Modifier
           </Button>
-          <Tooltip title="Voir la fiche">
+          <Tooltip title="Aperçu rapide">
             <Button
               size="small"
               onClick={withSound(() => openDetail(record), "success")}
             >
               Détails
+            </Button>
+          </Tooltip>
+          <Tooltip title="Fiche complète — historique & localisation">
+            <Button
+              size="small"
+              type="link"
+              style={{ padding: '0 4px' }}
+              onClick={() => navigate(`/dashboard/arme/fiche/${record.id}`)}
+            >
+              Fiche
             </Button>
           </Tooltip>
         </Space>
